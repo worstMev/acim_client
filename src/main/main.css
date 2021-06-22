@@ -1,0 +1,67 @@
+/* App is the container , already flex; row */
+.main_layout{
+    width : 100%;
+    height : 100%;
+    display : flex;
+    flex-direction : column;
+    overflow: hidden;
+}
+
+.header{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    align-items : center;
+}
+
+.main_display{
+    width : 100%;
+    height : 94%;
+    max-height : 94%;
+    display : flex;
+    flex-direction : row;
+
+}
+
+nav{
+    width : 25%;
+    height : 100%;
+    padding : 0;
+    display : flex;
+    flex-direction : column;
+}
+nav a{
+    text-decoration : none;
+    border : 1px solid grey;
+    font-size : 1.2em;
+    text-align : center;
+    color : black;
+}
+.main_display .side_nav{
+    border-top : 1px solid grey;
+    background : #80808017;
+}
+.main_display .side_nav a{
+    border : 0;
+    transition :0.1s;
+}
+.display{
+    width : 75%;
+    height : 99%;
+    /*border : 1px solid green;*/
+    border-top : 1px solid grey;
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    align-items : center;
+    padding : 10px;
+}
+
+.main_display .side_nav .active_navLink{
+    color: red;
+    border-right: none;
+    /* border: none; */
+    border-bottom : 2px solid red;
+    background : white;
+    font-weight: 300;
+}

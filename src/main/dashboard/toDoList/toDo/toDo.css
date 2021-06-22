@@ -1,0 +1,40 @@
+.toDo{
+    /*border : 1px solid yellow;*/
+    border : 1px solid darkgrey;
+    border-radius : 5px;
+    background : #94676738;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+    align-items : flex-end;
+    max-height : 300px;
+    min-height : 50px;
+    height  : 50px;
+    margin : 10px;
+    transition : 0.5s;
+    overflow : hidden;
+}
+
+.toDo-sum{
+    /*border : 1px solid black;*/
+    /*background : blue;*/
+    display: flex ;
+    width : 100%;
+    height : 90%;
+    max-height : 45px;/*90% of 50px ~ height of to Do*/
+    min-height : 45px;
+    flex-direction : row;
+    justify-content : space-around;
+}
+
+.toDo-details{
+    /*border : 1px solid black;*/
+    /*background : green;*/
+    transition : 0.5s;
+    display : flex;
+    width: 100%;
+    padding: 0 10px;
+    flex-direction : column;
+    align-items : flex-start;
+}
+

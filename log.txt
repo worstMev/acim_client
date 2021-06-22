@@ -1,0 +1,1 @@
+87 vulnerabilties , NO BUILD POSSIBLE yet , waiting for patch from react-create-app

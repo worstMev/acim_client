@@ -1,0 +1,67 @@
+.ask{
+    display : flex;
+    flex-direction : column;
+    justify-content : space-evenly;
+    height : 100%;
+    width : 75%;
+}
+
+.ask .dropdown-zone, 
+.ask .remarque-problem,
+.ask .double-dropdown{
+    text-align : center;
+    border : 1px solid #8080805e;
+}
+
+.dropdown-zone{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    align-items : center;
+    width : 100%;
+}
+
+.dropdown-zone .dropDown , .double-dropdown .dropDown {
+    width : auto;
+}
+
+.remarque-problem{
+    display : flex ;
+    flex-direction : column;
+    align-items : flex-start;
+}
+.remarque-problem textarea{
+    width : 100%;
+    height : 70%;
+}
+
+.dropdown-zone p{
+    width : 50%;
+}
+
+.double-dropdown{
+    display: flex;
+    flex-direction : row;
+}
+
+.double-dropdown .dropdown-zone {
+    height : 100%;
+}
+
+.my-button{
+    border : 1px solid red;
+    background :red;
+    color : black;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+.my-button:active, .my-button:hover {
+    border-color: red;
+    background: white;
+    color: red;
+    font-weight: 350
+}
+
+.ask .my-button{
+    font-size : 1.3em;
+    width : 30%;
+}
