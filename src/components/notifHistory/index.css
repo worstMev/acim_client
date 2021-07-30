@@ -1,0 +1,40 @@
+.notif_history{
+    /*border : 1px solid red;*/
+    border-radius : 0 5px 5px 0;
+    background : #94676738;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+    align-items : flex-end;
+    max-height : 300px;
+    min-height : 50px;
+    height  : 50px;
+    margin : 10px;
+    transition : 0.5s;
+    overflow : auto;
+}
+
+.notif_history-sum{
+    display: flex ;
+    width : 100%;
+    height : 90%;
+    max-height : 45px;/*90% of 50px ~ height of to Do*/
+    min-height : 45px;
+    flex-direction : row;
+    justify-content : space-around;
+}
+
+.notif_history-sum * {
+    width : 100%;
+    text-align : center;
+}
+
+.notif-details{
+    display : flex;
+    width: 100%;
+    padding: 0 10px;
+    flex-direction : column;
+    align-items : flex-start;
+    justify-content : center;
+}
+

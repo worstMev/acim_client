@@ -1,0 +1,107 @@
+/* App is the container , already flex; row */
+.notif_pop{
+    position : absolute;
+    top : -1000px;
+    left : 186px;
+    transition : 0.5s;
+    width : 75%;
+    height : fit-content;
+    opacity : 0.9;
+}
+.notif_pop_notif{
+    border : 1px solid black;
+    font-size : 2em;
+    background : lightgrey;
+    display : flex;
+    flex-direction : row;
+    justify-content : space-around;
+    align-items : center;
+    margin : 5px 0;
+    overflow-x : auto;
+}
+.notif_pop_notif * {
+    width : 100%;
+    text-align : center;
+}
+.notif_pop_notif #notif_time{
+    font-size : 0.5em;
+    width : 25%;
+}
+
+.main_layout{
+    width : 100%;
+    height : 100%;
+    display : flex;
+    flex-direction : column;
+    overflow: hidden;
+}
+.main-tabDisplay{
+    width : 75%;
+    height : 99%;
+    /*border : 1px solid green;*/
+    border-top : 1px solid grey;
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+    padding : 10px;
+}
+
+.header{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    align-items : center;
+}
+
+.main_display{
+    width : 100%;
+    height : 94%;
+    max-height : 94%;
+    display : flex;
+    flex-direction : row;
+
+}
+
+nav{
+    width : 25%;
+    height : 100%;
+    padding : 0;
+    display : flex;
+    flex-direction : column;
+}
+nav a{
+    text-decoration : none;
+    border : 1px solid grey;
+    font-size : 1.2em;
+    text-align : center;
+    color : black;
+}
+.main_display .side_nav{
+    border-top : 1px solid grey;
+    background : #80808017;
+}
+.main_display .side_nav a{
+    border : 0;
+    transition :0.1s;
+}
+.display{
+    width : 100%;
+    height : 100%;
+    /*border : 1px solid green;*/
+    /*border-top : 1px solid grey;*/
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    align-items : center;
+    padding : 10px;
+}
+
+.main_display .side_nav .active_navLink{
+    color: red;
+    border-right: none;
+    /* border: none; */
+    border-bottom : 2px solid red;
+    background : white;
+    font-weight: 300;
+}

@@ -1,0 +1,16 @@
+.decharge-form{
+    width : 100%;
+    overflow-y : auto;
+}
+
+.decharge-form label{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+}
+
+.interventionDecharge{
+    border : 1px solid lightgrey;
+    margin : 10px;
+    border-radius : 5px;
+}

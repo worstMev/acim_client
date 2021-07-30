@@ -1,0 +1,40 @@
+.foldableDiv{
+    width : 100%;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+    overflow : hidden;
+    transition : max-height 0.2s;
+    /*border-left : 1px solid grey;
+    border-right : 1px solid grey;
+    border-top : 1px solid #f4f4f4;*/
+    margin : 5px 0;
+}
+
+.foldableDiv-title{
+    width : 100%;
+    height : 50px;
+    min-height : 50px;
+    max-height : 50px;
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    align-items : flex-end;
+    border-bottom : 1px solid grey;
+    padding : 0 10px;
+}
+
+.foldableDiv-title button{
+    border : none;
+    font-size : 1.5em;
+    background : none;
+}
+
+.foldableDiv-children {
+    width : 100%;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+    align-items : center;
+    overflow : auto;
+}

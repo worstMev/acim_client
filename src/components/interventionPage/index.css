@@ -1,0 +1,62 @@
+.interventionPage{
+    display : flex;
+    flex-direction : column;
+    width : 100%;
+    height : 100%;
+    justify-content : flex-start;
+    padding : 5px;
+}
+
+.interventionPage *{
+}
+
+.interventionPage-title{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+}
+.interventionPage-title button{
+    width : fit-content;
+}
+
+.interventionPage-title p{
+    width :50%;
+}
+.intervention-display{
+    height : 100%;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+    align-items : flex-end;
+    width : 100%;
+    overflow : auto;
+}
+.intervention-display p{
+    margin : 5px 0;
+    width : 100%;
+}
+
+.intervention-form{
+    overflow: auto;
+    border : 1px solid black;
+    width: 100%;
+    height : 95%;
+}
+
+.intervention-modifier{
+    border : 1px solid lightgrey;
+    margin : 10px;
+    border-radius : 5px;
+    display : flex;
+    flex-direction : row;
+}
+
+.intervention-modifier > .foldableDiv{
+    width : 100%;
+}
+.intervention-modifier > div{
+    width : 90%;
+}
+
+.intervention-control{
+}

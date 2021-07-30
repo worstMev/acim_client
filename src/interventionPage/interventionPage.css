@@ -1,0 +1,27 @@
+.interventionPage{
+    display : flex;
+    flex-direction : column;
+    width : 100%;
+    height : 100%;
+    justify-content : flex-start;
+    padding : 5px;
+}
+
+.interventionPage *{
+    width : 100%;
+}
+.intervention-display{
+    height : 100%;
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    align-items : flex-end;
+    width : 100%;
+}
+.intervention-display p{
+    border-top : 1px solid grey;
+    border-bottom : 1px solid grey;
+    background : lightgrey;
+    margin : 5px 0;
+    width : 100%;
+}

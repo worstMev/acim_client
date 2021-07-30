@@ -39,6 +39,7 @@ export default class Login extends React.Component {
             if( response.isAuthenticated ){
                 this.props.setCredentials({
                     logged : true,
+                    num_user : response.num_user,
                     username : response.username,
                     type_user   : response.type_user,
                 });

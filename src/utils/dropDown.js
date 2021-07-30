@@ -14,6 +14,15 @@ class DropDown extends React.Component {
             {item}
             </option>
         );
+        if( this.props.objArray ){
+            optionArray = this.props.objArray.map( item =>
+                <option
+                    key = { item.key }
+                    value = { item.value } >
+                { item.libelle }
+                </option>
+            );
+        }
         return (
             <div className="dropDown">
                 <select defaultValue= {this.props.selectedValue} value={this.props.value} onChange ={(e)=> this.props.onChange(e)} >
