@@ -6,6 +6,7 @@ import Dashboard from './../dashboard';
 import NotifsHistory from './../notifsHistory';
 import ToDoList from './../toDoList';
 import InterventionPage from './../interventionPage';
+import InterventionHistory from './../interventionHistory';
 
 
 export default class Main extends React.Component{
@@ -199,6 +200,7 @@ export default class Main extends React.Component{
                             <NavLink activeClassName="active_navLink"  to={`${url}/dashboard`}>tableau de bord</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/mytask`}>Mes taches</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/notifsHistory`}>Historiques des notifications</NavLink>
+                            <NavLink activeClassName="active_navLink"  to={`${url}/interventionHistory`}>Historiques des interventions</NavLink>
                         </nav>
                             <div className="main-tabDisplay" >
                                 <div className="display" style={displayStyle}>
@@ -213,13 +215,28 @@ export default class Main extends React.Component{
 
                                         <Route path={`${path}/mytask`} 
                                                 render = {
-                                                    (routeProps) => <ToDoList {...routeProps} {...this.props} showSub={this.showSub} socket={this.socket} num_tech_main={session.num_user} topText={`Listes des taches a faire par ${session.username} :`}/>
+                                                    (routeProps) => <ToDoList {...routeProps} 
+                                                                        {...this.props} 
+                                                                        showSub={this.showSub} 
+                                                                        socket={this.socket} 
+                                                                        num_tech_main={session.num_user} 
+                                                                        topText={`Listes des taches a faire par ${session.username} :`}
+                                                                        />
 
                                         }/>
 
                                         <Route path={`${path}/notifsHistory`} 
                                                 render = { (routeProps) => 
                                                     <NotifsHistory  {...routeProps} session={this.props.session} socket={this.socket}/>
+                                        }/>
+
+                                        <Route path={`${path}/interventionHistory`} 
+                                                render = { (routeProps) => 
+                                                    <InterventionHistory  {...routeProps} 
+                                                        session={this.props.session} 
+                                                        socket={this.socket} 
+                                                        showSub={this.showSub}
+                                                        />
                                         }/>
 
                                     </Switch>

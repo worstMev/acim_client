@@ -27,6 +27,7 @@ export default class Intervention extends React.Component {
             tech_main_username,
             numero,
             done,
+            probleme_resolu,
             libelle_probleme_tech_type,
             code_intervention_type} = this.props.intervention;
         let sumStyle ;
@@ -81,7 +82,7 @@ export default class Intervention extends React.Component {
                     <p> {lieu_libelle} </p>
                     <p id="tache_description"> {intervention_type} </p>
                     <p id="tech_main_username"> {tech_main_username} </p>
-                    <p> Effectue : { (done) ? 'OUI' : 'NON' } </p>
+                    <p> Effectue : { (done) ? 'OUI' : 'NON' } et {(probleme_resolu) ? 'RESOLU' : 'NON-RESOLU' } </p>
                     <button onClick={this.showDetails}> Details </button>
                 </div>
                 <div className="toDo-details" style={detailStyle} >

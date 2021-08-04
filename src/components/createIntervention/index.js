@@ -20,6 +20,7 @@ export default class CreateIntervention extends Component {
             motif : 'ND',
             problemeList : [] ,
             selectedNumProblemeTechType : '',
+            message : '',
         }
         this.materiels = null;
         this.lieus = null;
@@ -115,6 +116,10 @@ export default class CreateIntervention extends Component {
             //send the 'create intervention'
             console.log( 'create intervention : ' , selectedNumInterventionType ,code_intervention_type,  selectedNumLieu,  dateProgramme,motif, selectedNumMateriel,selectedNumProblemeTechType);
             this.props.socket.emit('create intervention', selectedNumInterventionType , code_intervention_type , selectedNumLieu , dateProgramme , motif , selectedNumMateriel,selectedNumProblemeTechType);
+        }else{
+            this.setState({
+                message : 'selectionner un type d\'intervention, un lieu et une date programmée',
+            });
         }
         
     }
@@ -220,10 +225,11 @@ export default class CreateIntervention extends Component {
             motif,
             selectedNumProblemeTechType,
             problemeList,
+            message,
         } = this.state;
         return (
             <div className="createIntervention">
-                <p> Creer une intervention component</p>
+                <p> Créer une intervention :</p>
                 <div className="scroll-option">
                     <FoldableDiv title="Intervention" folded={false}>
                         <div className="sub-category-option">
@@ -286,6 +292,7 @@ export default class CreateIntervention extends Component {
                     </FoldableDiv>
                 </div>
                 <button onClick={this.createIntervention} > Planifier </button>
+                <p> {message} </p>
             </div>
         );
     }

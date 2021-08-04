@@ -1,7 +1,10 @@
 import React from 'react';
 import './index.css';
 //for a DropDown
-//expect : defaultValue , value and onChange for controlling the component , array for the data in options
+//props : 
+//-defaultValue , 
+//-value and onChange for controlling the component , 
+//-array or objArray{key , libelle, value} for the data in options
 class DropDown extends React.Component {
     render(){
         let array = this.props.array || [] ;
