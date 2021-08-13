@@ -34,20 +34,24 @@ export default class Login extends React.Component {
             });
         }else{
             console.log('authenticate username/password');
-            const response = await authenticate(this.state.submittedUsername , this.state.submittedPassword);
-            console.log(response);
-            if( response.isAuthenticated ){
-                this.props.setCredentials({
-                    logged : true,
-                    num_user : response.num_user,
-                    username : response.username,
-                    type_user   : response.type_user,
-                });
-                //console.log(' type_user from server '+ response.type_user);
-                let computedHash_USER = await computeHmac(User.USER.code, response.username);
-                let computedHash_TECH_MAIN = await computeHmac(User.TECH_MAIN.code, response.username);
-                if ( response.type_user === computedHash_USER ) this.props.history.push('/notify');
-                if( response.type_user === computedHash_TECH_MAIN ) this.props.history.push('/acim');
+            try{
+                const response = await authenticate(this.state.submittedUsername , this.state.submittedPassword);
+                console.log(response);
+                if( response.isAuthenticated ){
+                    this.props.setCredentials({
+                        logged : true,
+                        num_user : response.num_user,
+                        username : response.username,
+                        type_user   : response.type_user,
+                    });
+                    //console.log(' type_user from server '+ response.type_user);
+                    let computedHash_USER = await computeHmac(User.USER.code, response.username);
+                    let computedHash_TECH_MAIN = await computeHmac(User.TECH_MAIN.code, response.username);
+                    if ( response.type_user === computedHash_USER ) this.props.history.push('/notify');
+                    if( response.type_user === computedHash_TECH_MAIN ) this.props.history.push('/acim');
+                }
+            }catch(err){
+                console.log('error in checkCrendentials' , err);
             }
         }
         //check for username , if valid > usernameIsValid = true , submittedUsername = username . done

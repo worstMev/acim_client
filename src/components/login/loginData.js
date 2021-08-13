@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const SERVER_BASE_URL = 'http://localhost:3500';
+const SERVER_BASE_URL = 'http://localhost:3500/ajax/acim';
 
 async function postRequest(url,data) {
     const axiosInstance = axios.create({

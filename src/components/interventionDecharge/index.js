@@ -7,6 +7,7 @@ import MultiMaterielSelector from './../multiMaterielSelector';
  * props :
  * -num_intervention : to create the decharge on db
  * -socket to query data on materielsSelector
+ * -downloadDecharge : method to download
  */
 export default function InterventionDecharge(props){
     //materiels are num_materiels
@@ -29,7 +30,7 @@ export default function InterventionDecharge(props){
             background : '#53d35342',
         };
         control = (
-            <button> Telecharger </button>
+            <button onClick={()=>props.downloadDecharge(num_decharge)}> Telecharger </button>
         );
         disabled = true;
     }else{
@@ -100,3 +101,10 @@ function formatDate (date) {
     day = (day.length < 2) ? '0'+day : day;
     return `${year}-${month}-${day}`;
 }
+
+//function downloadDecharge(num_decharge){
+//    //open route /decharge/num_decharge/ in a new tab
+//    //alert('downloadDecharge', num_decharge);
+//    const URL = '/acim/decharge';
+//    window.open(URL ,  '_blank');
+//}

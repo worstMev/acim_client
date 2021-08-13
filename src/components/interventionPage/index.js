@@ -122,6 +122,17 @@ export default class InterventionPage extends React.Component  {
             }
         } 
     }
+
+    getDecharge = (num_decharge) => {
+        //get the server url , 
+        const s_URL = new URL(document.location.href);
+        //may not need to change port
+        const m_path = `/pdf/acim/decharge/${num_decharge}`
+        s_URL.port = 3500;
+        s_URL.pathname = m_path;
+        console.log('s_URL',s_URL);
+        window.open(s_URL, '_blank');
+    }
     componentDidMount () {
         console.log('intervention page mounted');
         console.log(this.props.socket);
@@ -283,7 +294,7 @@ export default class InterventionPage extends React.Component  {
                     }
                     { num_decharge_info &&
                         <p>
-                            ID decharge : <button> {num_decharge_info} </button>
+                            ID decharge : <button onClick={()=> this.getDecharge(num_decharge_info)}> {num_decharge_info} </button>
                         </p>
                     }
                     { num_materiel &&
@@ -327,6 +338,7 @@ export default class InterventionPage extends React.Component  {
                                     socket = {this.props.socket}
                                     num_intervention = {num_intervention}
                                     num_decharge = {num_decharge}
+                                    downloadDecharge = {this.getDecharge}
                                     />
                                 <button onClick={this.updateIntervention}> Sauvergarder </button>
                             </FoldableDiv>
