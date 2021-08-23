@@ -14,6 +14,8 @@ export default class InterventionHistory extends Component {
             date_fin : new Date(new Date().setHours(23,59,59)),
             statut :{ done : 'nd' , probleme_resolu : 'nd'},
             interventionList : [],
+            num_intervention : '',//no nd cause we add % and then it is not nd
+            num_intervention_type : 'nd',
         };
     }
     setTechMain = (tech) => {
@@ -45,6 +47,18 @@ export default class InterventionHistory extends Component {
             statut : st,
         });
     }
+
+    setNumIntervention = (num) => {
+        this.setState({
+            num_intervention : num,
+        });
+    }
+
+    setNumInterventionType = (num) => {
+        this.setState({
+            num_intervention_type : num,
+        });
+    }
     componentDidUpdate (prevProps,prevState) {
         //console.log('prevState', prevState);
         if(prevState.date_debut.getTime() !== this.state.date_debut.getTime()
@@ -52,9 +66,16 @@ export default class InterventionHistory extends Component {
             || prevState.tech_main.num !== this.state.tech_main.num
             || prevState.statut.done !== this.state.statut.done
             || prevState.statut.probleme_resolu !== this.state.statut.probleme_resolu
+            || prevState.num_intervention !== this.state.num_intervention
+            || prevState.num_intervention_type !== this.state.num_intervention_type
         ){
             console.log('emit again');
-            this.props.socket.emit('get intervention history', this.state.tech_main.num,this.state.date_debut , this.state.date_fin , this.state.statut );
+            let num_intervention;
+            if(this.state.num_interevnetion !== 'nd'){
+                //add '%' for the LIKE comparisson
+                num_intervention = `%${this.state.num_intervention}%`;
+            }
+            this.props.socket.emit('get intervention history', this.state.tech_main.num,this.state.date_debut , this.state.date_fin , this.state.statut , this.state.num_intervention_type ,num_intervention);
         }
     };
     componentDidMount(){
@@ -64,7 +85,8 @@ export default class InterventionHistory extends Component {
            date_fin,
            statut,
        } = this.state;
-       this.props.socket.emit('get intervention history', tech_main.num ,null , date_fin , statut);
+       this.props.socket.emit('get intervention history', tech_main.num ,null , date_fin , statut,null , null);
+        //num_intervention use LIKE %...%
        this.props.socket.emit('get oldest intervention date');
         this.props.socket.on('oldest intervention date', (minDate) => {
             this.setState({
@@ -75,9 +97,10 @@ export default class InterventionHistory extends Component {
             console.log('intervention history', interventions );
             let newInterventionList = interventions.map( (item, index)=> ({
                 num_intervention : item.num_intervention,
+                num_intervention_pere : item.num_intervention_pere,
                 date_programme : item.date_programme,
-                lieu_libelle : item.libelle_lieu,
-                intervention_type : item.libelle_intervention_type,
+                libelle_lieu : item.libelle_lieu,
+                libelle_intervention_type : item.libelle_intervention_type,
                 tech_main_username : item.tech_main_username,
                 motif : item.motif,
                 numero : index + 1,
@@ -85,7 +108,10 @@ export default class InterventionHistory extends Component {
                 probleme_resolu : item.probleme_resolu,
                 libelle_probleme_tech_type : item.libelle_probleme_tech_type,
                 code_intervention_type : item.code_intervention_type,
+                children : item.children,
             }));
+            console.log('newInterventionList' , newInterventionList);
+
 
             this.setState({
                 interventionList : newInterventionList,
@@ -105,6 +131,8 @@ export default class InterventionHistory extends Component {
             date_debut,
             date_fin,
             interventionList,
+            num_intervention,
+            num_intervention_type,
         } = this.state;
         return (
             <div className="interventionHistory">
@@ -119,6 +147,10 @@ export default class InterventionHistory extends Component {
                         setDateFin={this.setDateFin}
                         statut={statut}
                         setStatut={this.setStatut}
+                        num_intervention = {this.state.num_intervention}
+                        setNumIntervention = {this.setNumIntervention}
+                        num_intervention_type = {num_intervention_type} 
+                        setNumInterventionType = {this.setNumInterventionType}
                         />
                         
                 </div>

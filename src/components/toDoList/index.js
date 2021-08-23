@@ -17,6 +17,7 @@ export default class ToDoList extends React.Component {
             interventionListUndone : [],
             interventionListUndoneLate : [],
             interventionListUndoneToday : [],
+            interventionListUndoneFuture : [],
         }
     }
     componentDidMount = () => {
@@ -26,9 +27,10 @@ export default class ToDoList extends React.Component {
             console.log('list undone intervention' , listUndoneIntervention);
             let newList = listUndoneIntervention.map( (item,index) => ({
                 num_intervention : item.num_intervention,
+                num_intervention_pere : item.num_intervention_pere,
                 date_programme : item.date_programme,
-                lieu_libelle : item.libelle,
-                intervention_type : item.libelle_intervention_type,
+                libelle_lieu : item.libelle,
+                libelle_intervention_type : item.libelle_intervention_type,
                 tech_main_username : item.username,
                 motif : item.motif,
                 numero : index + 1,
@@ -36,23 +38,31 @@ export default class ToDoList extends React.Component {
                 libelle_probleme_tech_type : item.libelle_probleme_tech_type,
                 code_intervention_type : item.code_intervention_type,
             }));
+            for( const interv of newList ){
+                interv.children = newList.filter( item => item.num_intervention_pere === interv.num_intervention);
+            }
             console.log('new list intervention undone' , newList);
             if(this.props.setNbInterventionUndone){
                 this.props.setNbInterventionUndone(newList.length);
             }
+            let endOfDay = new Date(new Date().setHours(23,59,59)).getTime();
             let newListLate = newList.filter( item => new Date(item.date_programme).getTime() <= new Date().getTime() ); 
             let newListToday = newList.filter( item => {
                 let interventionDate = new Date(item.date_programme).getTime() ;
                 let startOfDay  = new Date(new Date().setHours(0,0,0)).getTime();
-                let endOfDay = new Date(new Date().setHours(23,59,59)).getTime();
                
                 return ( interventionDate > startOfDay && interventionDate <= endOfDay );
+            });
+            let newListFuture = newList.filter( item => {
+                let interventionDate = new Date(item.date_programme).getTime() ;
+                return ( interventionDate > endOfDay );
             });
             console.log('newListToday' , newListToday);
             this.setState({
                 interventionListUndone : newList,
                 interventionListUndoneLate : newListLate,
                 interventionListUndoneToday : newListToday,
+                interventionListUndoneFuture : newListFuture,
             });
         });
         this.props.socket.on('new intervention' , ()=> {
@@ -89,9 +99,11 @@ export default class ToDoList extends React.Component {
             interventionListUndoneLate,
             interventionListUndoneToday,
             interventionListUndone,
+            interventionListUndoneFuture,
         } = this.state;
         let retardTitle = `En retard : ${interventionListUndoneLate.length}`;
         let todayTitle = `Aujourd'hui : ${interventionListUndoneToday.length}`;
+        let futureTitle = `A venir : ${interventionListUndoneFuture.length}`;
         let allTitle = `Toutes : ${interventionListUndone.length}`;
         return (
             <div id="toDoList" onClick={this.clickOnToDoList}>
@@ -105,6 +117,11 @@ export default class ToDoList extends React.Component {
                         <FoldableDiv title={todayTitle} >
                             <div className="scroll_list">
                                     {this.displayToDo(this.state.interventionListUndoneToday)}
+                            </div>
+                        </FoldableDiv>
+                        <FoldableDiv title={futureTitle} folded={true}>
+                            <div className="scroll_list">
+                                    {this.displayToDo(this.state.interventionListUndoneFuture)}
                             </div>
                         </FoldableDiv>
                         <FoldableDiv title={allTitle} folded={true}>

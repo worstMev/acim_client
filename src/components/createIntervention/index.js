@@ -2,15 +2,18 @@ import './index.css';
 import React , {Component} from 'react';
 import FoldableDiv from './../foldableDiv';
 import Dropdown from './../../utils/dropDown';
+import InterventionDecharge from './../interventionDecharge';
 
 export default class CreateIntervention extends Component {
     constructor(props){
         super(props);
+
+        let supposedFreeHours = new Date().getHours() + 1;
         this.state = {
             interventionTypeList : [],
             selectedNumInterventionType : '',
-            dateProgramme : new Date() ,
-            dateProgrammeDisplay : new Date(new Date().setHours(11,0,0,0)).toISOString().replace('Z',''),
+            dateProgramme : new Date( new Date().setHours(supposedFreeHours,0,0)).toISOString(),//localTime
+            dateProgrammeDisplay : new Date(new Date().setHours((supposedFreeHours+3),0,0,0)).toISOString().replace('Z',''),//UTC : localTime - 3 , display consider its input to be localtime and tries to change it to UTC 
             lieuList : [],
             selectedNumLieu : '',
             materielList : [],
@@ -21,6 +24,7 @@ export default class CreateIntervention extends Component {
             problemeList : [] ,
             selectedNumProblemeTechType : '',
             message : '',
+            num_intervention_pere : '',//initialized by route here
         }
         this.materiels = null;
         this.lieus = null;
@@ -96,9 +100,6 @@ export default class CreateIntervention extends Component {
         });
     }
 
-    createDecharge = () => {
-        alert('Creer un decharge pour le materiel :'+this.state.selectedNumMateriel);
-    }
 
 
     createIntervention = () => {
@@ -109,13 +110,17 @@ export default class CreateIntervention extends Component {
             selectedNumProblemeTechType,
             selectedNumMateriel,
             motif,
+            num_intervention_pere,
         } = this.state;
         let code_intervention_type = '';//we use numInterventionType
         //must be there : numInterventionType , numLieu , date_programme , 
         if( selectedNumInterventionType && selectedNumLieu && dateProgramme ) {
             //send the 'create intervention'
-            console.log( 'create intervention : ' , selectedNumInterventionType ,code_intervention_type,  selectedNumLieu,  dateProgramme,motif, selectedNumMateriel,selectedNumProblemeTechType);
-            this.props.socket.emit('create intervention', selectedNumInterventionType , code_intervention_type , selectedNumLieu , dateProgramme , motif , selectedNumMateriel,selectedNumProblemeTechType);
+            console.log( 'create intervention : ' , selectedNumInterventionType ,code_intervention_type,  selectedNumLieu,  dateProgramme,motif, selectedNumMateriel,selectedNumProblemeTechType,num_intervention_pere);
+            this.props.socket.emit('create intervention', selectedNumInterventionType , code_intervention_type , selectedNumLieu , dateProgramme , motif , selectedNumMateriel,selectedNumProblemeTechType,num_intervention_pere);
+            this.setState({
+                message : 'intervention Creer lance',
+            });
         }else{
             this.setState({
                 message : 'selectionner un type d\'intervention, un lieu et une date programmée',
@@ -136,9 +141,15 @@ export default class CreateIntervention extends Component {
                 value : type.num_intervention_type,
                 libelle : type.libelle_intervention_type,
             }));
+            let newSelectedNumInterventionType = newInterventionList[0].key;
+            if( this.props.location.state ){
+                if ( this.props.location.state.num_intervention_type ){
+                    newSelectedNumInterventionType = this.props.location.state.num_intervention_type;
+                }
+            }
             this.setState({
                 interventionTypeList : newInterventionList,
-                selectedNumInterventionType : newInterventionList[0].key,
+                selectedNumInterventionType : newSelectedNumInterventionType,
             });
         });
         
@@ -204,6 +215,25 @@ export default class CreateIntervention extends Component {
                 problemeList : newProblemeList,
             });
         });
+
+        this.props.socket.on('new intervention', (intervention) => {
+            let {
+                num_intervention,
+            } = intervention;
+            console.log('new intervention createIntervention');
+            this.setState({
+                message : `Intervention ${num_intervention} créée.`
+            });
+        });
+
+        if(this.props.location.state){
+            this.setState({
+                num_intervention_pere : this.props.location.state.num_intervention_pere,
+                selectedNumInterventionType : this.props.location.state.num_intervention_type,
+            });
+        }
+
+
     }
 
     componentWillUnmount () {
@@ -226,10 +256,14 @@ export default class CreateIntervention extends Component {
             selectedNumProblemeTechType,
             problemeList,
             message,
+            num_intervention_pere,
         } = this.state;
         return (
             <div className="createIntervention">
                 <p> Créer une intervention :</p>
+                { num_intervention_pere &&
+                    <p> Suite de l'intervention : {num_intervention_pere} </p> 
+                }
                 <div className="scroll-option">
                     <FoldableDiv title="Intervention" folded={false}>
                         <div className="sub-category-option">
@@ -266,9 +300,6 @@ export default class CreateIntervention extends Component {
                             <label> Materiel: 
                             </label>
                             <Dropdown value={selectedNumMateriel} objArray = {materielList} onChange={this.updateMateriel}/>
-                        </div>
-                        <div className="sub-category-option">
-                            <button onClick={this.createDecharge}> creer une decharge </button>
                         </div>
                     </FoldableDiv>
                     <FoldableDiv title="Motif" folded={true}>

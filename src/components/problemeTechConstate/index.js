@@ -29,7 +29,7 @@ export default class ProblemeConstate extends Component {
         this.props.socket.emit('get probleme_tech_type list');
         this.props.socket.emit('get lieu list');
 
-        this.props.socket.on('probleme_tech_type list' , (probleme_tech_types) => {
+        this.props.socket.on('probleme_tech_type list -problemeTechConstate' , (probleme_tech_types) => {
 
             console.log('probleme_tech_types list',probleme_tech_types);
             let newProblemeList = probleme_tech_types.map( blem => ({
@@ -48,7 +48,7 @@ export default class ProblemeConstate extends Component {
 
         });
 
-        this.props.socket.on('lieu list' , (lieus) => {
+        this.props.socket.on('lieu list -problemeTechConstate' , (lieus) => {
             console.log('lieus' , lieus );
             let newLieuList = lieus.map( lieu => ({
                 key : lieu.num_lieu,
@@ -67,8 +67,9 @@ export default class ProblemeConstate extends Component {
     }
 
     componentWillUnmount () {
-        this.props.socket.off('probleme_tech_type list');
-        this.props.socket.off('lieu list');
+        console.log('ProblemeTechConstate unmount');
+        this.props.socket.off('probleme_tech_type list -problemeTechConstate');
+        this.props.socket.off('lieu list -problemeTechConstate');
     }
     
     render () {

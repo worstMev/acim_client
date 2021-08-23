@@ -17,6 +17,7 @@ export default class Intervention_notification extends React.Component{
             console.log('list intervention' , notifList);
             let new_interventionTab = notifList.map( (item,index) => ({
                 num_intervention : item.num_intervention ,
+                code_intervention_type : item.code_intervention_type,
                 date_programme : item.date_programme,
                 lieu_libelle : item.lieu,
                 intervention_type : item.libelle_intervention_type,
@@ -24,6 +25,8 @@ export default class Intervention_notification extends React.Component{
                 motif : item.motif,
                 numero : index + 1,
                 done : item.done,
+                children : item.children,
+                probleme_resolu : item.probleme_resolu,
             }));
             this.setState({
                 interventionTab : new_interventionTab,

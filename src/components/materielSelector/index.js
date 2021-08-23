@@ -59,7 +59,7 @@ export default class MaterielSelector extends Component {
     }
     componentDidMount(){
         this.props.socket.emit('get materiel list');
-        this.props.socket.on('materiel list' ,(materiels,materielTypes) => {
+        this.props.socket.on('materiel list -materielSelector' ,(materiels,materielTypes) => {
             console.log('materiels', materiels);
             let materielsList ;
             
@@ -88,7 +88,8 @@ export default class MaterielSelector extends Component {
         });
     }
     componentWillUnmount(){
-       this.props.socket.off('materiel list'); 
+       console.log('materielSelector unmount');
+       this.props.socket.off('materiel list -materielSelector'); 
     }
     render() {
         let {

@@ -1,0 +1,24 @@
+.activeUsers{
+    height : 100%;
+    width : 100%;
+    background : #80808017;
+    display : flex;
+}
+.header-activeUsers {
+    height : 10%;
+    width : 100%;
+    border-bottom : 1px solid grey;
+}
+
+.activeUsers .scroll_list{
+    height : 90%;
+}
+
+.userListItem{
+    margin : 5px 0;
+    transition : 0.5s;
+}
+
+.statut-userListItem{
+    font-size : 0.5em;
+}

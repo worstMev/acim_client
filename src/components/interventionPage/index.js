@@ -116,11 +116,21 @@ export default class InterventionPage extends React.Component  {
                 console.log('emit update decharge intervention');
                 this.props.socket.emit('update decharge intervention' , num_decharge , num_intervention);
             }
-            if(materiels){
+            if(materiels.length > 0 
+                && !( materiels.filter(item => item.num === 'nd').length > 0 ) ){
                 console.log('emit update intervention info num_materiel');
                 this.props.socket.emit('update intervention info num_materiel', num_intervention , materiels[0].num);
             }
         } 
+    }
+
+    openCreateIntervention = () => {
+        this.props.closeSub();
+        let state = {
+            num_intervention_pere : this.state.num_intervention,
+            num_intervention_type : 'a768355e-3cd2-497c-b579-d4e184b61298'//suite_int id
+        };
+        this.props.history.push('/acim/dashboard/creer',state);
     }
 
     getDecharge = (num_decharge) => {
@@ -206,11 +216,12 @@ export default class InterventionPage extends React.Component  {
         
     }
     componentWillUnmount(){
+        console.log('interventionPage unmount');
         this.props.socket.off('intervention data');
         this.props.socket.off('tech_main is authenticated');
         this.props.socket.off('started intervention');
-        this.props.socket.off('probleme_tech_type list');
-        this.props.socket.off('lieu list');
+        //this.props.socket.off('probleme_tech_type list');
+        //this.props.socket.off('lieu list');
         this.props.socket.off('new decharge');
     }
     render () {
@@ -232,6 +243,8 @@ export default class InterventionPage extends React.Component  {
             num_materiel,
             libelle_materiel ,
             libelle_materiel_type ,
+            children,
+            num_intervention_pere,
         }   = this.state.intervention;
         let log_info_tab , log_info_elements;
         if( log_info ) {
@@ -268,14 +281,31 @@ export default class InterventionPage extends React.Component  {
                         <button onClick={() => this.endIntervention()}> Terminer </button>
                 }
                 {  !probleme_resolu &&
-                        <button onClick={() => this.endIntervention(true)}> OK </button>
+                        <button onClick={() => this.endIntervention(true)}> Terminé & Résolu </button>
+                }
+                { !probleme_resolu && done && this.props.match.path === '/acim' &&
+                        <button onClick={this.openCreateIntervention}> Creer une intervention suite </button>
                 }
             </>
         );
+        console.log('children' , children);
+        let childButton;
+        if( children){
+            childButton = children.map( child => 
+                <li key={child.num_intervention}>
+                    Intervention #<button onClick={()=> this.props.showSub(child.num_intervention)}> {child.num_intervention} </button>
+                </li>
+            );
+        }
         if( this.state.techMainIsAuth ) {
             let info;
             info = (
                 <>
+                    { num_intervention_pere &&
+                        <p> { `Suite de l'intervention : ` }   
+                            <button onClick={()=> this.props.showSub(num_intervention_pere)}> {num_intervention_pere} </button>
+                        </p>
+                    }
                     <p> Type : {libelle_intervention_type} </p> 
                     <p> Motif : {motif} </p>
                     <p> Lieu : {libelle_lieu} </p>
@@ -303,6 +333,11 @@ export default class InterventionPage extends React.Component  {
                             </p>
                     }
                     <p> Probleme resolue : { (probleme_resolu) ? 'OUI' : 'NON' } </p>
+                    { children.length > 0 &&
+                            <p>
+                               Suite : {childButton} 
+                            </p>
+                    }
                 </>
             );
             display = (

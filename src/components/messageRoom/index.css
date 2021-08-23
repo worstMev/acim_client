@@ -1,0 +1,62 @@
+.messageRoom{
+    border-left : 1px solid lightgrey;
+    width : 100%;
+    height : 100%;
+    display : flex;
+    flex-direction : column;
+}
+
+.header-messageRoom{
+    border-bottom : 1px solid lightgrey;
+    height : 10%;
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+}
+
+.main-messageRoom{
+    height : 90%;
+    display : flex;
+    flex-direction : column;
+}
+
+.main-messageRoom .scroll_list{
+    height : 90%;
+}
+
+.input-messageRoom{
+    display : flex;
+    flex-direction : row;
+    justify-content : flex-end;
+    align-items : center;
+    height : 10%;
+}
+
+.messageElement{
+    display : flex;
+    width : 100%;
+    flex-direction : row;
+    margin : 10px 0;
+    align-items : center;
+}
+
+.messageElement .indication-message{
+    font-size : 0.5em;
+}
+
+.contenu-message{
+    width : fit-content;
+    max-width : 75%;
+    overflow-wrap : break-word;
+    border-bottom : 1px solid grey;
+    border-top : 1px solid grey;
+    margin : 5px 0 5px 5px;
+    padding : 5px;
+    display : flex;
+    flex-direction :column;
+}
+
+.from-message{
+    font-size : 0.5em;
+}

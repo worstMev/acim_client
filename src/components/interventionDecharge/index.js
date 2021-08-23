@@ -48,7 +48,8 @@ export default function InterventionDecharge(props){
         let materielsValide = materiels.filter( item => (item.num !== 'nd' && item.type !== 'nd'))
         console.log('materielsValide', materielsValide);
         if( materielsValide.length  
-            && dateDebut.getTime() <= dateFin.getTime()){
+            && dateDebut.getTime() <= dateFin.getTime()
+            && !num_decharge){
             console.log('createDecharge' , dateDebut , dateFin , materielsValide );
             let date = {
                 debut : dateDebut,

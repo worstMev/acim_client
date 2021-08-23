@@ -8,11 +8,15 @@ import DropDown from './../utils/dropDown';
  * - setDebut
  * - setFin
  * - setStatut
+ * - setnumIntervention
+ * - setInterventionType
  * - socket : for initialization
  * - tech_main,
  * - date_debut,
  * - date_fin,
  * - statut,
+ * - num_intervention
+ * _ numInterventionType
  */
 
 export default class InterventionHistoryControl extends Component{
@@ -34,8 +38,10 @@ export default class InterventionHistoryControl extends Component{
                   value : 3,
                   libelle : 'effectuée-non-résolue'},
             ],
-        }
+            interventionTypes : [],
+        };
         this.techMains = {};
+        //this.intervType = {}; //correspondance num_intervention et libelle
         this.statuts = {
             0 : {
                 done : 'nd',
@@ -53,8 +59,6 @@ export default class InterventionHistoryControl extends Component{
                 done : true,
                 probleme_resolu : false,
             },
-
-
         };
     }
     updateTechMain = (e) => {
@@ -80,6 +84,16 @@ export default class InterventionHistoryControl extends Component{
         let newStatut = this.statuts[e.target.value];
         this.props.setStatut(newStatut);
 
+    }
+
+    updateNumIntervention = (e) => {
+        console.log('updateNumIntervention' , e.target.value);
+        this.props.setNumIntervention(e.target.value);
+    }
+
+    updateNumInterventionType = (e) => {
+        console.log('updateNumInterventionType',e.target.value);
+        this.props.setNumInterventionType(e.target.value);
     }
 
     componentDidMount(){
@@ -108,10 +122,25 @@ export default class InterventionHistoryControl extends Component{
             });
 
         });
+        this.props.socket.emit('get intervention type');
+        this.props.socket.on('intervention_type list -interventionHistoryControl',(interventionTypes)=>{
+            let newInterventionTypes = interventionTypes.map( item => ({
+                key : item.num_intervention_type,
+                libelle : item.libelle_intervention_type,
+                value : item.num_intervention_type,
+            }));
+            newInterventionTypes.unshift({key: 'nd' , libelle : 'nd' , value : 'nd'});
+            this.setState({
+                interventionTypes : newInterventionTypes,
+            });
+
+        });
     }
 
     componentWillUnmount(){
+        console.log('interventionHistoryControl unmount');
         this.props.socket.off('tech_mains list');
+        this.props.socket.off('intervention_type list -interventionHistoryControl');
     }
 
     render(){
@@ -119,11 +148,14 @@ export default class InterventionHistoryControl extends Component{
             tech_main,
             date_debut,
             date_fin,
-            statut
+            statut,
+            num_intervention,
+            num_intervention_type,
         } = this.props;
         let {
             tech_mainList,
             statutList,
+            interventionTypes,
         } = this.state;
         let statutValue  = 1;
         if(statut.done){
@@ -165,6 +197,22 @@ export default class InterventionHistoryControl extends Component{
                         value = {statutValue}
                         onChange = {this.updateStatut}
                         objArray = {statutList}
+                        />
+                </div>
+                <div className="sub-control">
+                    <p> {`Type d'intervention :`} </p>
+                    <DropDown 
+                        value = {num_intervention_type}
+                        onChange = {this.updateNumInterventionType}
+                        objArray = {interventionTypes}
+                        />
+                </div>
+                <div className="sub-control">
+                    <p> ID : </p>
+                    <input
+                        placeholder = "Recherche par ID"
+                        value = {num_intervention}
+                        onChange = {this.updateNumIntervention}
                         />
                 </div>
             </div>
