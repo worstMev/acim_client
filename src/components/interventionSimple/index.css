@@ -1,0 +1,26 @@
+.interventionSimple{
+    margin : 10px 0;
+    display : flex;
+    flex-direction : column;
+    align-items : flex-end;
+}
+
+.interventionSimple .main{
+    border : 1px solid black;
+    border-left : blue;
+    display : flex;
+    flex-direction : row;
+}
+
+
+.interventionSimple .main .text{
+    padding : 5px;
+}
+
+.done, .probleme_resolu{
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+}
+.done img{
+}

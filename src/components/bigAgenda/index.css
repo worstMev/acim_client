@@ -1,0 +1,25 @@
+.bigAgenda{
+    border : 1px solid black;
+    display : flex;
+    flex-direction : column;
+    width : 100%;
+    height : 100%;
+    justify-content : flex-start;
+}
+
+.bigAgenda .control{
+    padding : 5px;
+    border-bottom : 1px solid grey;
+    height : 5%;
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+}
+
+.bigAgenda .display{
+    background : lightgrey;
+    display : flex;
+    height : 95%;
+    
+    
+}

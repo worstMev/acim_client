@@ -5,6 +5,7 @@
     flex-direction : column;
     justify-content : flex-start;
     border-right : 1px solid grey;
+    padding : 10px;
 }
 
 .sub-control{

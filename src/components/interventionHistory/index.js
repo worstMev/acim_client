@@ -28,7 +28,7 @@ export default class InterventionHistory extends Component {
     setDateDebut = (debut) => {
         //debut must be a new Date()
         console.log('setDateDebut', debut);
-        if(debut.getTime() > this.state.date_fin.getTime()) debut = this.state.date_fin;
+        if(debut.getTime() > this.state.date_fin.getTime()) debut = new Date(new Date(this.state.date_fin).setHours(0,0,0));
         
         this.setState({
             date_debut : debut,
@@ -36,7 +36,7 @@ export default class InterventionHistory extends Component {
     }
     setDateFin = (fin) => {
         console.log('setDateFin', fin);
-        if(fin.getTime() < this.state.date_debut.getTime()) fin = this.state.date_debut;
+        if(fin.getTime() < this.state.date_debut.getTime()) fin = new Date(new Date(this.state.date_debut).setHours(23,59,59));
         this.setState({
             date_fin : fin,
         });
@@ -109,6 +109,7 @@ export default class InterventionHistory extends Component {
                 libelle_probleme_tech_type : item.libelle_probleme_tech_type,
                 code_intervention_type : item.code_intervention_type,
                 children : item.children,
+                commentaire : item.commentaire,
             }));
             console.log('newInterventionList' , newInterventionList);
 

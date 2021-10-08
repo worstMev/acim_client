@@ -37,10 +37,9 @@ export default class ToDoList extends React.Component {
                 done : item.done,
                 libelle_probleme_tech_type : item.libelle_probleme_tech_type,
                 code_intervention_type : item.code_intervention_type,
+                children : item.children,
+                commentaire : item.commentaire,
             }));
-            for( const interv of newList ){
-                interv.children = newList.filter( item => item.num_intervention_pere === interv.num_intervention);
-            }
             console.log('new list intervention undone' , newList);
             if(this.props.setNbInterventionUndone){
                 this.props.setNbInterventionUndone(newList.length);
@@ -72,6 +71,11 @@ export default class ToDoList extends React.Component {
 
         this.props.socket.on('ended intervention' , () => {
             console.log('ended intervention todolist');
+            this.props.socket.emit('get undone intervention');
+        });
+
+        this.props.socket.on('intervention data -toDoList' , () => {
+            console.log('intervention date -toDoList');
             this.props.socket.emit('get undone intervention');
         });
     }

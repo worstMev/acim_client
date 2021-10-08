@@ -1,6 +1,10 @@
 import './index.css';
 import React from 'react';
 import { Urgent } from './../../urgent';
+/*
+ * props:
+ * - notif : probleme_type , code, statut_libelle, lieu, date_envoie, remarque, tech_main_username, date_reponse, num_notification, num_intervention , date_programme ,
+ */
 
 export default class Notif_history extends React.Component {
     constructor(props){
@@ -91,6 +95,7 @@ export default class Notif_history extends React.Component {
             date_reponse,
             num_notification,
             num_intervention ,
+            date_programme ,
         } = this.props.notif;
         return (
             <div className="notif_history" style={style} >
@@ -111,6 +116,7 @@ export default class Notif_history extends React.Component {
                 </div>
                 { this.state.detailsAreShown &&
                     <div className="notif-details" style={detailStyle}>
+                        <p> Intervention de {tech_main_username} le {date_programme} </p>
                         <p> remarque: {remarque} </p>
                         <p> prise en charge par : {tech_main_username}  </p>
                         <p> repondue le : {date_reponse} </p>

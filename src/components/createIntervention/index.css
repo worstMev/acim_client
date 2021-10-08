@@ -6,6 +6,10 @@
     justify-content : space-between;
     padding : 5px;
 }
+ .createIntervention .notif_pop{
+     height : 200px;
+     top: -1000px;
+ }
 
 .scroll-option{
     overflow : auto;
@@ -22,4 +26,12 @@
 }
 .sub-category-option *{
     width : 100%;
+}
+
+@media (max-width : 930px){
+    .agenda-createIntervention{
+        width : 100%;
+        position: absolute;
+        left : 0px;
+    }
 }

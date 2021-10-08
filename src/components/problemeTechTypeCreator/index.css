@@ -1,0 +1,42 @@
+.problemeTechTypeCreator{
+    background : lightgrey;
+    display : flex;
+    flex-direction : column;
+    align-items : center;
+    width : 50%;
+    padding : 10px;
+    border-radius : 10px;
+}
+.problemeTechTypeCreator .top{
+    width : 100%;
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    border-bottom : 1px solid grey;
+}
+
+.problemeTechTypeCreator .main{
+    display : flex;
+    flex-direction : column;
+    margin-top : 5px;
+}
+
+.problemeTechTypeCreator .main input{
+    margin-top: 5px;
+    font-size : 1.1em;
+
+}
+
+.problemeTechTypeCreator .main .myButton{
+    border : none;
+    background : white;
+}
+
+.problemeTechTypeCreator .main .myButton:hover{
+    background : green;
+}
+
+.problemeTechTypeCreator .indic{
+    display : none;
+    
+}

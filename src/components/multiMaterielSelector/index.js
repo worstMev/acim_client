@@ -4,7 +4,7 @@ import FoldableDiv from './../foldableDiv';
 import MaterielSelector from './../materielSelector';
 /*
  * props:
- * - listMateriel : array;
+ * - listMateriel : array [{num,type,lieu}];
  * - setListMateriel to change listMateriel
  * - socket 
  * - maxListMaterielLength
@@ -12,7 +12,7 @@ import MaterielSelector from './../materielSelector';
  * - folded
  */
 export default function MultiMaterielSelector (props){
-    let listMateriel = props.listMateriel;
+    let listMateriel = props.listMateriel; 
      let maxLength = (props.maxListMaterielLength) ? props.maxListMaterielLength : 77;
     let title = (props.title) ? props.title : "Selectionner le(s) materiel(s)";
     let folded = (props.folded) ? props.folded : false;
@@ -51,9 +51,10 @@ export default function MultiMaterielSelector (props){
             key = {index}
             title = {`Materiel #${index+1}`}
             socket = {props.socket}
-            changeList = {(obj)=> changeListMateriel(obj,index)}
+            onChange = {(obj)=> changeListMateriel(obj,index)}
             selectedNumMateriel = {materiel.num}
             selectedMaterielType = {materiel.type}
+            selectedLieu = {materiel.lieu}
             />
     );
 

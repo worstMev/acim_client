@@ -29,6 +29,7 @@ export default class History extends React.Component {
                 tech_main_username : item.tech_main_username || '-',
                 date_reponse : (item.date_reponse)? new Date(item.date_reponse).toLocaleString('fr-FR'): '-',
                 num_intervention : item.num_intervention || 'nd',
+                date_programme : (item.date_programme)? new Date(item.date_programme).toLocaleString('fr-FR'): '-',
             }));
             this.setState({
                 notifsTab : newNotifsTab,

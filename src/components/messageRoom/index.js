@@ -134,28 +134,28 @@ export default class MessageRoom extends Component {
                         time_sent : new Date(ms.date_envoie).toLocaleString(),
                         time_seen : ms.date_reception,
                         seen,
-                        contenu : ms.contenu_message,
-                        to : ms.recepteur_username,
-                        from : ms.envoyeur_username,
-                    });
+                    contenu : ms.contenu_message,
+                    to : ms.recepteur_username,
+                    from : ms.envoyeur_username,
                 });
-                console.log('newMessages +' , newMessages);
-                this.setState({
-                    messages : newMessages,
-                });
-                this.scrollDown();
-                this.clickOnMessageRoom();
-            }
+            });
+            console.log('newMessages +' , newMessages);
+            this.setState({
+                messages : newMessages,
+            });
+            this.scrollDown();
+            this.clickOnMessageRoom();
+        }
 
-        });
+    });
 
-        this.props.socket.on('new message -messageRoom' , (ms) => {
-            console.log('new message -messageRoom', ms);
-            let {
-                selectedUser,
-                session,
-            } = this.props;
-            this.props.socket.emit('get tech_mains list');//update nb new message in activeUsers
+    this.props.socket.on('new message -messageRoom' , (ms) => {
+        console.log('new message -messageRoom', ms);
+        let {
+            selectedUser,
+            session,
+        } = this.props;
+        this.props.socket.emit('get tech_mains list');//update nb new message in activeUsers
             
             if( this.props.selectedUser.num_user === ms.num_app_user_envoyeur){
                 let newMs = {
@@ -224,7 +224,7 @@ export default class MessageRoom extends Component {
         console.log('clickOnMessageRoom state.message', this.state.messages);
         let unseenMessagesByMe = this.state.messages.filter( ms => !ms.seen && !ms.time_seen && ms.to === this.props.session.username );
         console.log('unseenMessagesByMe', unseenMessagesByMe);
-        if( unseenMessagesByMe.length > 0) this.props.socket.emit('tech_main saw messages', unseenMessagesByMe);
+        if( unseenMessagesByMe.length > 0) this.props.socket.emit('app_user saw messages', unseenMessagesByMe);
     };
 
     render () {

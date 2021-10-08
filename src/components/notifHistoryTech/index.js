@@ -22,8 +22,8 @@ export default class NotifHistoryTech extends React.Component {
         switch(this.props.notif.statut_code){
             case Urgent.MAX.code :
                 style = {
-                    borderLeft : '3px solid red',
-                    //borderRight : '3px solid red',
+                    borderLeft : '13px solid red',
+                    //borderRight : '13px solid red',
                 };
                 statutStyle = {
                     //background : 'red',
@@ -34,8 +34,8 @@ export default class NotifHistoryTech extends React.Component {
 
             case Urgent.MID.code :
                 style = {
-                    borderLeft : '3px solid yellow',
-                    //borderRight : '3px solid yellow',
+                    borderLeft : '13px solid yellow',
+                    //borderRight : '13px solid yellow',
                 };
                 statutStyle = {
                     //background : 'yellow',
@@ -46,7 +46,7 @@ export default class NotifHistoryTech extends React.Component {
 
             case Urgent.MIN.code :
                 style = {
-                    borderLeft : '3px solid blue',
+                    borderLeft : '13px solid blue',
                     //borderRight : '2px solid blue',
                 };
                 statutStyle = {
@@ -95,16 +95,15 @@ export default class NotifHistoryTech extends React.Component {
                         <p> Date d'envoie : </p>
                         <p> {this.props.notif.date_envoie} </p>
                     </div>
-                    <button onClick={this.showDetails}> Details </button>
+                    <button className="myButton" onClick={this.showDetails}> Details </button>
                 </div>
                 { this.state.detailsAreShown &&
                     <div className="notif-details" style={detailStyle}>
                         <p> remarque: {this.props.notif.remarque} </p>
                         <p> envoyee par : {this.props.notif.user_sender_username} </p>
-                        <p> pris en charge par : {this.props.notif.tech_main_username}  </p>
+                        <p> prise en charge par : {this.props.notif.tech_main_username}  </p>
                         <p> repondue le : {this.props.notif.date_reponse} </p>
                         <p> ID notification : {this.props.notif.num_notification} </p>
-                        <p> Details 1 </p>
                     </div>
                 }
             </div>

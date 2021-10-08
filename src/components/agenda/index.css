@@ -1,0 +1,57 @@
+.agenda{
+    width : 100%;
+    height : 100%;
+    background : lightgrey;
+    display : flex;
+    flex-direction : column;
+    height: moz-fit-content;
+    /*height : fit-content;*/
+}
+.header-agenda{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+}
+.main-agenda{
+    display : flex;
+    flex-direction : row;
+    overflow-x : auto;
+    width : 100%;
+    height: moz-fit-content;
+    height : 100%;
+}
+
+.agendaDay{
+    border : 1px solid black;
+    margin : 2px 5px;
+    min-width : 350px;
+    height : auto;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+    align-items : flex-start;
+    padding : 5px;
+    border-radius : 5px;
+}
+
+.agendaDay:hover{
+    background : white;
+}
+
+.listInterv-agendaDay{
+    border-top : 2px solid grey;
+    width : 100%;
+    overflow-y : auto;
+}
+.interv-agendaDay{
+    margin : 2px;
+    display :flex;
+}
+
+.interv-agendaDay:hover{
+    border : 2px solid blue;
+}
+
+.interv-agendaDay p{
+    width : 100%;
+}

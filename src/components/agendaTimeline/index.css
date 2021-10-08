@@ -1,0 +1,8 @@
+.agendaTimeline{
+    display : flex;
+    flex-direction : row;
+    overflow-x : auto;
+    width : 100%;
+    height: moz-fit-content;
+    height : 100%;
+}

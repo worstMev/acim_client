@@ -1,19 +1,17 @@
-
 .toDo{
     /*border : 1px solid yellow;*/
     border : 1px solid darkgrey;
-    border-radius : 5px;
     background : #94676738;
     display : flex;
     flex-direction : column;
     justify-content : flex-start;
-    align-items : flex-end;
+    align-items : flex-start;
     /*max-height : 300px;*/
-    min-height : 100px;
-    height  : 50px;
+    min-height : 150px;
+    height  : 150px;
     margin : 10px;
     transition : 0.5s;
-    overflow : hidden;
+    overflow-y : hidden;
 }
 
 .toDo-sum{
@@ -21,22 +19,64 @@
     /*background : blue;*/
     display: flex ;
     width : 100%;
-    height : 90%;
-    max-height : 90px;/*90% of 50px ~ height of to Do*/
-    min-height : 90px;
-    flex-direction : row;
-    justify-content : space-around;
+    height : 84%;
+    max-height : 126px;/*height% of min-height px of to Do*/
+    min-height : 126px;/*height% of min-height px of to Do*/
+    flex-direction : column;
+    justify-content : flex-start;
+    align-items : center;
+    border : 1px solid blue;
 }
-
 .toDo-sum *{
     width : 100%;
     text-align : center;
 }
 
-.toDo-sum #tache_description{
+.toDo-sum .time{
+    font-size : 1.2em;
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    height : 15%;
+}
+
+.toDo-sum .time .hour{
+}
+
+.toDo-sum .info{
+    display : flex;
+    flex-direction : row;
+    height : 80%;
+}
+
+.toDo-sum .info .dots{
+    display : flex;
+    flex-direction : row;
+    font-size : 0.5em;
+    border : 1px solid green;
     height : 100%;
-    border : 1px solid lightgrey ;
-    overflow : auto;
+}
+
+.toDo-sum .info .dots .done, .toDo-sum .info .dots .probleme_resolu{
+    width : 100%;
+    height : 100%;
+    display : flex;
+    justify-content : space-between;
+    background : yellow;
+}
+
+.toDo-sum .tache_description{
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    border : 1px solid red;
+}
+
+.toDo-sum .tache_description *{
+    border : 1px solid red;
+}
+
+.toDo-sum #tache_description{
 }
 
 .toDo-sum #tech_main_username{
@@ -61,4 +101,25 @@
 
 .childList{
     width : 100%;
+}
+
+.toDo .my-button{
+    border : none;
+    background : none;
+    width : fit-content;
+    height : 100%;
+    border-radius : 2px;
+}
+.toDo .my-button:hover{
+    background :lightgrey;
+}
+.vertical_dot{
+    width: 25px;
+}
+
+.details-bt{
+    background : green;
+    width : 100%;
+    height : 15%;
+    display : none;
 }

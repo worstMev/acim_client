@@ -36,10 +36,9 @@
     overflow: hidden;
 }
 .main-tabDisplay{
-    width : 75%;
-    height : 99%;
+    width : 85%;
+    height : 100%;
     /*border : 1px solid green;*/
-    border-top : 1px solid grey;
     display : flex;
     flex-direction : row;
     justify-content : center;
@@ -52,6 +51,10 @@
     flex-direction : row;
     justify-content : space-between;
     align-items : center;
+    height : 6%;
+}
+.main_layout .side_bt{
+    display : none;
 }
 
 .main_display{
@@ -62,9 +65,42 @@
     flex-direction : row;
 
 }
-
+@media (max-width: 930px){
+    .main_display {
+        width : 100%;
+        height : 94%;
+        max-height : 94%;
+        display : flex;
+        flex-direction : column;
+        z-index : 0;
+    }
+    #main_nav{
+        width : auto;
+        height : auto;
+        padding : 0;
+        display : none;
+        border : 1px solid white;
+        border-radius : 0 10px 10px 0;
+        position : absolute;
+        background : lightgrey;
+        top : 150px;
+        z-index: 7;
+    }
+    .main-tabDisplay{
+        width : 100%;
+    }
+    .main_layout .side_bt{
+        display : block;
+        position : absolute;
+        bottom : 10px;
+        left : 10px;
+    }
+    .main_display .side_nav .active_navLink{
+        border-right : 4px solid red;
+    }
+}
 nav{
-    width : 25%;
+    width : 15%;
     height : 100%;
     padding : 0;
     display : flex;
@@ -74,16 +110,19 @@ nav a{
     text-decoration : none;
     border : 1px solid grey;
     font-size : 1.2em;
-    text-align : center;
+    padding : 7px;
+    padding-left : 10px;
     color : black;
 }
 .main_display .side_nav{
-    border-top : 1px solid grey;
+    padding-left : 10px;
+    padding-top : 20px;
     background : #80808017;
 }
 .main_display .side_nav a{
     border : 0;
-    transition :0.1s;
+    border-top-left-radius : 7px;
+    border-bottom-left-radius : 7px;
 }
 .display{
     width : 100%;
@@ -102,6 +141,9 @@ nav a{
     border-right: none;
     /* border: none; */
     border-bottom : 2px solid red;
+    border-top : 2px solid red;
+    border-left : 2px solid red;
+    border-right : 4px solid white;
     background : white;
     font-weight: 300;
 }

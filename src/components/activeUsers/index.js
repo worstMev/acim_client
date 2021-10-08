@@ -6,6 +6,7 @@ import React, {Component} from 'react';
  * - socket
  * - setSelectedUser
  * - selectedUser
+ * - session
  */
 
 export default class ActiveUsers extends Component {
@@ -32,6 +33,7 @@ export default class ActiveUsers extends Component {
             // { num_user , username , num_type_user}
             tech_mains.sort((a,b) => {
                 if ( a.num_user === this.props.session.num_user ) return -1;
+                else return 1;
             });
             this.setState({
                 allUserList : tech_mains,

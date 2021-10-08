@@ -19,7 +19,7 @@ export default class InterventionPage extends React.Component  {
             remarque : '',
             log : 'etape1 ; etape2; etape3;',
             num_decharge : '',
-            materiels : [{num:'nd' , type:'nd'}],//only one but to adapt to multiMaterielSelector way of things we use an array
+            materiels : [{num:'nd' , type:'nd', lieu:'nd'}],//only one but to adapt to multiMaterielSelector way of things we use an array
         }
     }
     updateMateriel = (newMateriels) => {
@@ -130,7 +130,8 @@ export default class InterventionPage extends React.Component  {
             num_intervention_pere : this.state.num_intervention,
             num_intervention_type : 'a768355e-3cd2-497c-b579-d4e184b61298'//suite_int id
         };
-        this.props.history.push('/acim/dashboard/creer',state);
+        //this.props.history.push('/acim/dashboard/creer',state);
+        this.props.history.push('/acim/creer',state);
     }
 
     getDecharge = (num_decharge) => {
@@ -143,6 +144,17 @@ export default class InterventionPage extends React.Component  {
         console.log('s_URL',s_URL);
         window.open(s_URL, '_blank');
     }
+    getDechargeDoc = (num_decharge) => {
+        //get the server url , 
+        const s_URL = new URL(document.location.href);
+        //may not need to change port
+        const m_path = `/docx/acim/decharge/${num_decharge}`
+        s_URL.port = 3500;
+        s_URL.pathname = m_path;
+        console.log('s_URL',s_URL);
+        window.open(s_URL, '_blank');
+    }
+
     componentDidMount () {
         console.log('intervention page mounted');
         console.log(this.props.socket);
@@ -245,6 +257,7 @@ export default class InterventionPage extends React.Component  {
             libelle_materiel_type ,
             children,
             num_intervention_pere,
+            commentaire,
         }   = this.state.intervention;
         let log_info_tab , log_info_elements;
         if( log_info ) {
@@ -275,16 +288,16 @@ export default class InterventionPage extends React.Component  {
         let control = (
             <>
                 { !date_debut &&
-                    <button onClick={this.startIntervention}> Commencer </button>
+                    <button className="myButton" onClick={this.startIntervention}> Commencer </button>
                 }
                 {  !done &&
-                        <button onClick={() => this.endIntervention()}> Terminer </button>
+                        <button className="myButton myButton_warning" onClick={() => this.endIntervention()}> Terminer </button>
                 }
                 {  !probleme_resolu &&
-                        <button onClick={() => this.endIntervention(true)}> Terminé & Résolu </button>
+                        <button className="myButton" onClick={() => this.endIntervention(true)}> Terminé & Résolu </button>
                 }
                 { !probleme_resolu && done && this.props.match.path === '/acim' &&
-                        <button onClick={this.openCreateIntervention}> Creer une intervention suite </button>
+                        <button  className="myButton" onClick={this.openCreateIntervention}> Creer une intervention suite </button>
                 }
             </>
         );
@@ -307,6 +320,7 @@ export default class InterventionPage extends React.Component  {
                         </p>
                     }
                     <p> Type : {libelle_intervention_type} </p> 
+                    <p>   -  {commentaire} </p> 
                     <p> Motif : {motif} </p>
                     <p> Lieu : {libelle_lieu} </p>
                     <p> Faite par : {tech_main_username} </p>
@@ -324,7 +338,8 @@ export default class InterventionPage extends React.Component  {
                     }
                     { num_decharge_info &&
                         <p>
-                            ID decharge : <button onClick={()=> this.getDecharge(num_decharge_info)}> {num_decharge_info} </button>
+                            ID decharge : 
+                            <button onClick={()=> this.getDechargeDoc(num_decharge_info)}> {num_decharge_info} </button>
                         </p>
                     }
                     { num_materiel &&
@@ -374,6 +389,7 @@ export default class InterventionPage extends React.Component  {
                                     num_intervention = {num_intervention}
                                     num_decharge = {num_decharge}
                                     downloadDecharge = {this.getDecharge}
+                                    downloadDechargeDoc = {this.getDechargeDoc}
                                     />
                                 <button onClick={this.updateIntervention}> Sauvergarder </button>
                             </FoldableDiv>
@@ -386,9 +402,13 @@ export default class InterventionPage extends React.Component  {
             );
         }else{
             display = (
-                <form onSubmit={this.authenticate}>
-                    <input type="password" placeholder={`mot de passe de ${tech_main_username}`}  value={this.state.pwd} onChange={this.updatePwd}/>
-                    <button onClick={this.authenticate}> Valider </button>
+                <form onSubmit={this.authenticate} className="pwdForm">
+                    <input type="password" 
+                            placeholder={`mot de passe de ${tech_main_username}`}  
+                            value={this.state.pwd} 
+                            className = "pwdInput"
+                            onChange={this.updatePwd}/>
+                    <button onClick={this.authenticate} className="myButton" > Valider </button>
                 </form>
             );
         }

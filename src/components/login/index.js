@@ -26,7 +26,7 @@ export default class Login extends React.Component {
     }
     checkCredentials = async (event) => {
         event.preventDefault();
-        if( !this.state.usernameIsValid) {
+        if( !this.state.usernameIsValid && this.state.submittedUsername) {
             const response = await authenticateUsername(this.state.submittedUsername);
             console.log(response);
             this.setState({
@@ -61,7 +61,7 @@ export default class Login extends React.Component {
         return (
             <div className="login">
                 <div>
-                    <img src="./base_logo_sans_texte.png" alt="mptdn|acim" id="logo"/>
+                    <img src="./base_logo_sans_texte_2.png" alt="mndpt|acim" id="logo"/>
                 </div>
                 <form className = "login_form" onSubmit={this.checkCredentials}>
                     { (this.state.usernameIsValid) ? 

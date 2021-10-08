@@ -5,3 +5,18 @@
     align-items : center;
     height : 100%;
 }
+
+.myButton{
+    background : none;
+    border : 1px solid black;
+    padding : 10px;
+    margin : 5px;
+    text-transform: uppercase;
+    border-radius : 5px;
+    font-weight : bold;
+}
+
+.myButton:hover {
+    color : white;
+    background : red;
+}

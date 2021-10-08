@@ -1,0 +1,44 @@
+
+.appHeader{
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    align-items : center;
+    height : 100%;
+    width : 100%;
+    padding : 5px 15px;
+    border-bottom : 1px solid lightgrey;
+}
+.appHeader *{
+    text-align : center;
+}
+
+.logo-main{
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    align-items : center;
+    height : 100%;
+    
+}
+
+.appHeader .username{
+    display : flex;
+    flex-direction : row;
+    justify-content : flex-start;
+    align-items : center;
+    width : 14%;
+}
+
+.appHeader .username .user_logo{
+    width : 20px;
+    margin-right : 5px;
+}
+
+.appHeader .deconnecter{
+}
+
+
+.logo-main img{
+    height : 100%;
+}

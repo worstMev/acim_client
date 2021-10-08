@@ -9,6 +9,7 @@ export default class ToDo extends React.Component {
             detailsAreShown : false ,
             commandAreShown : false,
         }
+        this.notifRef = React.createRef();
     }
     showDetails = () => {
         if(this.state.commandAreShown) return ;
@@ -30,9 +31,14 @@ export default class ToDo extends React.Component {
         let num_app_user_tech_main = this.props.num_user;
         console.log(`do the notif #${num_notification} ${delai} by ${num_app_user_tech_main}`);
         this.props.socket.emit('tech_main do' , { num_notification , num_app_user_tech_main , delai });
+        this.notifRef.current.style.border = '2px solid green';
 
     }
     render () {
+        let {
+            probleme_type,
+            lieu,
+        } = this.props.notif;
         let style;
         let sumStyle ;
         let statutStyle ;
@@ -40,7 +46,7 @@ export default class ToDo extends React.Component {
         switch(this.props.notif.statut_code){
             case Urgent.MAX.code :
                 style = {
-                    borderLeft : '3px solid red',
+                    borderLeft : '13px solid red',
                     //borderRight : '3px solid red',
                 };
                 statutStyle = {
@@ -51,7 +57,7 @@ export default class ToDo extends React.Component {
 
             case Urgent.MID.code :
                 style = {
-                    borderLeft : '3px solid yellow',
+                    borderLeft : '13px solid yellow',
                     //borderRight : '3px solid yellow',
                 };
                 statutStyle = {
@@ -62,7 +68,7 @@ export default class ToDo extends React.Component {
 
             case Urgent.MIN.code :
                 style = {
-                    borderLeft : '3px solid blue',
+                    borderLeft : '13px solid blue',
                     //borderRight : '2px solid blue',
                 };
                 statutStyle = {
@@ -87,7 +93,7 @@ export default class ToDo extends React.Component {
 
         }
         return (
-            <div className="notif" style={style} >
+            <div className="notif" style={style} ref={this.notifRef}>
                 <div className="notif-sum" style={sumStyle}>
                     <div className="probleme_type" >
                         <p> {this.props.notif.probleme_type} </p>
@@ -101,21 +107,22 @@ export default class ToDo extends React.Component {
                         <p> Date d'envoie : </p>
                         <p> {this.props.notif.date_envoie} </p>
                     </div>
-                    <button onClick={this.showDetails}> Details </button>
-                    <button onClick={this.showCommand}> repondre </button>
+                    <button className="myButton" onClick={this.showDetails}> Details </button>
+                    <button className="myButton" onClick={this.showCommand}> repondre </button>
                 </div>
                 { this.state.detailsAreShown &&
                     <div className="notif-details" style={detailStyle}>
+                        <p> Probleme notifié : {probleme_type} </p>
                         <p> Remarque : {this.props.notif.remarque || '-'} </p>
+                        <p> Lieu : {lieu} </p>
                         <p> Envoyee par : {this.props.notif.sender_username || '-'} </p>
-                        <p> Details 1 </p>
                     </div>
                 }
                 {
                     this.state.commandAreShown &&
                         <div className="notif-command" >
-                            <button onClick={()=> this.do()}>prendre en charge</button>
-                            <button>faire patienter</button>
+                            <button className="myButton" onClick={()=> this.do()}>prendre en charge</button>
+                            <button className="myButton" onClick={() => this.do(60)}>faire patienter</button>
                             <button>ouvrir message</button>
                         </div>
                 }

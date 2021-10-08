@@ -2,6 +2,7 @@ import './index.css';
 import React,{useState } from 'react';
 import FoldableDiv from './../foldableDiv';
 import MultiMaterielSelector from './../multiMaterielSelector';
+import { generateDocx } from './../../generateDocx/generate.js';
 
 /*
  * props :
@@ -12,7 +13,7 @@ import MultiMaterielSelector from './../multiMaterielSelector';
 export default function InterventionDecharge(props){
     //materiels are num_materiels
     let tomorrowDate = new Date(new Date().setDate(new Date().getDate()+1)); 
-    let [ materiels , setMateriels ] = useState([{ num:'nd' , type: 'nd'}]);
+    let [ materiels , setMateriels ] = useState([{ num:'nd' , type: 'nd' , lieu : 'nd'}]);
     let [ dateDebut , setDateDebut ] = useState(new Date());
     let [ dateFin , setDateFin ] = useState(tomorrowDate);
     let {
@@ -30,12 +31,37 @@ export default function InterventionDecharge(props){
             background : '#53d35342',
         };
         control = (
-            <button onClick={()=>props.downloadDecharge(num_decharge)}> Telecharger </button>
+            <>
+                <button onClick={()=>props.downloadDechargeDoc(num_decharge)}> Telecharger Docx</button>
+            </>
         );
         disabled = true;
     }else{
         control = (
-            <button onClick={createDecharge}> Creer </button>
+            <>
+                <label> Debut : 
+                <input 
+                    type='date' 
+                    value ={formatDate(dateDebut)} 
+                    onChange={updateDateDebut} 
+                    disabled={disabled}
+                    />
+                </label>
+                <label> Fin : 
+                <input 
+                    type='date' 
+                    value={formatDate(dateFin)} 
+                    onChange={(e)=> setDateFin(new Date(e.target.value))}
+                    disabled={disabled}
+                    />
+                </label>
+                <MultiMaterielSelector 
+                    socket = {props.socket}
+                    listMateriel = {materiels}
+                    setListMateriel = {setMateriels}
+                    />
+                <button onClick={createDecharge}> Creer </button>
+            </>
         );
     }
     
@@ -61,32 +87,12 @@ export default function InterventionDecharge(props){
         }
     }
 
+
     console.log('render InterventionDecharge');
     return(
         <div className ="interventionDecharge" style={style}>
             <FoldableDiv title={title} folded={true}>
                 <div className="decharge-form">
-                    <label> Debut : 
-                    <input 
-                        type='date' 
-                        value ={formatDate(dateDebut)} 
-                        onChange={updateDateDebut} 
-                        disabled={disabled}
-                        />
-                    </label>
-                    <label> Fin : 
-                    <input 
-                        type='date' 
-                        value={formatDate(dateFin)} 
-                        onChange={(e)=> setDateFin(new Date(e.target.value))}
-                        disabled={disabled}
-                        />
-                    </label>
-                    <MultiMaterielSelector 
-                        socket = {props.socket}
-                        listMateriel = {materiels}
-                        setListMateriel = {setMateriels}
-                        />
                     {control}
                 </div>
             </FoldableDiv>

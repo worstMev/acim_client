@@ -1,0 +1,18 @@
+.rapportActivite{
+    width : 75%;
+    padding : 30px;
+    border-radius : 13px;
+    background : lightgrey;
+    display : flex;
+    flex-direction : column;
+    justify-content : space-between;
+    height : 50%;
+
+}
+
+.rapportActivite button{
+    border: none;
+    font-size: 1.3em;
+    padding: 5px;
+    border-radius: 5px;
+}

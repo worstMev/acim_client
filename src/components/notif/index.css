@@ -1,17 +1,27 @@
 .notif{
     /*border : 1px solid red;*/
-    border-radius : 0 5px 5px 0;
+    border-radius : 10px;
+    padding : 10px;
     background : #94676738;
     display : flex;
     flex-direction : column;
     justify-content : flex-start;
     align-items : flex-end;
     max-height : 300px;
-    min-height : 50px;
-    height  : 60px;
+    min-height : 100px;
+    height  : 100px;
     margin : 10px;
     transition : 0.5s;
     overflow : auto;
+}
+
+.notif .myButton{
+    margin : 0;
+    background : lightgrey;
+}
+
+.notif .myButton:hover{
+    background : grey;
 }
 
 .notif-sum{

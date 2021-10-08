@@ -25,8 +25,9 @@
 
 .dashboard #nav_dashboard a {
     width : 33.3%;
-    padding : 2px;
+    padding : 2px 7px;
     font-size : 1em;
+    text-align : center;
 }
 
 .active_navLink_dashboard{
