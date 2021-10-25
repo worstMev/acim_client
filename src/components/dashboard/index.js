@@ -85,7 +85,6 @@ export default class Dashboard extends React.Component{
                     <nav id="nav_dashboard">
                         <NavLink activeClassName="active_navLink_dashboard" to={`${url}/toDo`}> Interventions a faire {(this.state.nbInterventionUndone > 0) ? `(${this.state.nbInterventionUndone})`:''} </NavLink>
                         <NavLink activeClassName="active_navLink_dashboard" to={`${url}/tech_activity`}> Activitées </NavLink>
-                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/notifs`}> Notifications {(this.state.nbNewNotification > 0) ? `(${this.state.nbNewNotification})`:''}</NavLink>
                         <NavLink activeClassName="active_navLink_dashboard" to={`${url}/creer`}> Creer </NavLink>
                     </nav>
                     <div id="display_dashboard">

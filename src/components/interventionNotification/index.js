@@ -20,7 +20,7 @@ export default class Intervention_notification extends React.Component{
                 code_intervention_type : item.code_intervention_type,
                 date_programme : item.date_programme,
                 lieu_libelle : item.lieu,
-                intervention_type : item.libelle_intervention_type,
+                libelle_intervention_type : item.libelle_intervention_type,
                 tech_main_username : item.tech_main_username,
                 motif : item.motif,
                 numero : index + 1,

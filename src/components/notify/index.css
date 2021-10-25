@@ -83,3 +83,14 @@
     font-size : 1.5em;
 }
 
+
+.call{
+    position : absolute;
+    width : 75%;
+    bottom : 50px;
+    left : -10050px;
+    transition : 0.5s;
+    border : 1px solid black;
+    background : green;
+    padding : 10px;
+}

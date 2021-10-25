@@ -2,6 +2,7 @@ import React from 'react';
 import './index.css';
 import { User, computeHmac } from './../../userTypes.js';
 import { authenticateUsername, authenticate } from './loginData';
+import logo from './../../res/logo/base_logo_4.png';
 
 export default class Login extends React.Component {
     constructor(props){
@@ -61,7 +62,7 @@ export default class Login extends React.Component {
         return (
             <div className="login">
                 <div>
-                    <img src="./base_logo_sans_texte_2.png" alt="mndpt|acim" id="logo"/>
+                    <img src={logo} alt="mndpt|acim" id="logo"/>
                 </div>
                 <form className = "login_form" onSubmit={this.checkCredentials}>
                     { (this.state.usernameIsValid) ? 

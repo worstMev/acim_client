@@ -18,12 +18,14 @@ import BigAgenda from './../bigAgenda';
 import AnnoncePage from './../annoncePage';
 import AppHeader from './../appHeader';
 import RapportActivite from './../rapportActivite';
+import Caller from './../caller';
 import notif1 from './../../res/son/correct_notif.wav';
 import notifMessage from './../../res/son/notif1.wav';
 
 /*
  * props:
  * - logOut
+ * - session
  */
 
 
@@ -41,6 +43,7 @@ export default class Main extends React.Component{
                     //lieu :'salle xxx',
                 //},
             ],
+            nbUndoneIntervention : 0,
             nbNewNotification : 0,
             nbNewMessage :0,
             nbNewAnnonce : 0,
@@ -56,6 +59,8 @@ export default class Main extends React.Component{
                 //},
                 
             ],
+            listToCall : [],//list of those we want to call; {username, num_user}
+            showCall : false,
         };
         this.socket = mySocket.socket;
         this.popUp = React.createRef();
@@ -64,13 +69,39 @@ export default class Main extends React.Component{
         this.messageSound = new Audio(notifMessage);
     }
 
+    addToListToCall = (newItem) => {
+        let newListToCall = this.state.listToCall.slice();
+        //only one per num_user
+        if( !newListToCall.find( item => item.num_user === newItem.num_user )){
+            newListToCall.push(newItem);//{num_user , username}
+            console.log('addToListToCall , newListToCall ', newListToCall);
+            this.setState({
+                listToCall : newListToCall,
+                showCall : true,
+            });
+        }else{
+            this.setState({
+                showCall : true,
+            });
+        }
+    }
+
+    deleteFromListToCall = (itemToDelete) => {
+        let newListToCall = this.state.listToCall.slice();
+        let indexToDelete = newListToCall.findIndex( item => item.num_user === itemToDelete.num_user );
+        newListToCall.splice(indexToDelete,1);
+        this.setState({
+            listToCall : newListToCall,
+        });
+
+    }
+
     showSub  = (num_intervention) => {
         let newShowSub;
         if( this.state.numSelectedIntervention === num_intervention ){
             //selected intervention hasn't change
             newShowSub = !(this.state.showSub);
             num_intervention = null;
-
         }else newShowSub = true;
         this.setState({
             showSub : newShowSub,
@@ -110,7 +141,7 @@ export default class Main extends React.Component{
         let { url } = this.props.match;
         //hide notif , and got to notification
         this.popUp.current.style.top = "-1000px";
-        this.props.history.push(`${url}/dashboard/notifs`);
+        this.props.history.push(`${url}/notifs`);
         
     }
 
@@ -231,6 +262,27 @@ export default class Main extends React.Component{
             });
         });
 
+        this.socket.emit('get nb undone intervention', this.props.session.num_user);
+        this.socket.on('nb intervention undone -main', (nb) => {
+            console.log('nb intervention undone -main', nb);
+            this.setState({
+                nbUndoneIntervention : nb,
+            });
+        });
+
+        this.socket.on('new intervention -main',(newInterv) => {
+            if(newInterv.num_app_user_tech_main_creator === this.props.session.num_user){
+                console.log('thats one more intervention for me');
+                this.socket.emit('get nb undone intervention' , this.props.session.num_user);
+            }
+        });
+        this.socket.on('ended intervention -main',(newInterv) => {
+            if(newInterv.num_app_user_tech_main_creator === this.props.session.num_user){
+                console.log('thats one less intervention for me');
+                this.socket.emit('get nb undone intervention' , this.props.session.num_user);
+            }
+        });
+
         this.socket.on('updateAnnonce -main', () => {
             console.log('updateAnnonce -main');
             this.socket.emit('get nb new annonce', this.props.session.num_user);
@@ -249,6 +301,8 @@ export default class Main extends React.Component{
         this.socket.off('new annonce -main');
         this.socket.off('nb new annonce -main');
         this.socket.off('updateAnnonce -main');
+        this.socket.off('new intervention -main');
+        this.socket.off('ended intervention -main');
         this.socket.offAny();
         this.socket.removeAllListeners();
         mySocket.socket.disconnect();
@@ -356,16 +410,22 @@ export default class Main extends React.Component{
         let {
             session,
         } = this.props;
-        let { showSub,
-                numSelectedIntervention ,
-                nbNewMessage,
-                nbNewNotification,
-                nbNewAnnonce ,
-                showNav,
+        let { 
+            showSub,
+            numSelectedIntervention ,
+            nbUndoneIntervention,
+            nbNewMessage,
+            nbNewNotification,
+            nbNewAnnonce ,
+            showNav,
+            showCall,
+            listToCall,
         } = this.state;
         let displayStyle ;
         let subStyle ;
         let navStyle;
+        let callListStyle;
+        let callElements;
         let mainTabStyle;
         let subDisplayChildrenStyle;
         let today = new Date();
@@ -397,6 +457,19 @@ export default class Main extends React.Component{
                 }
             }
         }
+        if(showCall){
+            callListStyle = {
+                top : '20px',
+            };
+            callElements = listToCall.map(({username , num_user}) => 
+                <Caller key={num_user} 
+                    socket = {this.socket}
+                    session = {this.props.session}
+                    deleteFromListToCall = {this.deleteFromListToCall}
+                    userToCall = {{username , num_user}}/>
+            );
+
+        }
                         //<div className="logo-main">
                         //    <img src={logo} alt="mndpt|acim"/>
                         //    
@@ -413,6 +486,13 @@ export default class Main extends React.Component{
                     <div className="notif_pop" ref={this.popUpMessage}>
                         {this.showNewMessageNotifs()}
                     </div>
+                    <div className="call_list" style={callListStyle}>
+                        <div>
+                            <p> Call list </p>
+                            <button onClick = {()=> this.setState({showCall : false})}> X </button>
+                        </div>
+                        {callElements}
+                    </div>
                     <div className="side_bt">
                         <button onClick={this.showNav}> ... </button>
                     </div>
@@ -422,7 +502,7 @@ export default class Main extends React.Component{
                     </div>
                     <div className="main_display">
                         <nav className="side_nav" id="main_nav" style={navStyle}>
-                            <NavLink activeClassName="active_navLink"  to={`${url}/mytasknew`} onClick={this.closeSub}>Mes taches</NavLink>
+                            <NavLink activeClassName="active_navLink"  to={`${url}/mytasknew`} onClick={this.closeSub}>Mes tâches{(nbUndoneIntervention>0) ? `(${nbUndoneIntervention})` : ''}</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/dashboard`} onClick={this.closeSub}>Tableau de bord</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/notifs`} onClick={this.closeSub}>Notifications{(nbNewNotification>0) ? `(${nbNewNotification})` : ''}</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/message`} onClick={this.closeSub}>Messages {(nbNewMessage>0) ? `(${nbNewMessage})` : ''}</NavLink>
@@ -474,6 +554,8 @@ export default class Main extends React.Component{
                                                 render = {
                                                     (routeProps) => <NotifsList  {...routeProps} 
                                                     {...this.props} 
+                                                    addToListToCall = {this.addToListToCall}
+                                                    deleteFromListToCall = {this.deleteFromListToCall}
                                                     setNbNewNotif = {this.nbNewNotificationPlus}
                                                     nbNewNotificationToZero = {() => this.nbNewNotificationPlus('0')} 
                                                     socket = {this.socket}/>

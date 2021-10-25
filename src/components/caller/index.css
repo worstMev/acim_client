@@ -1,0 +1,13 @@
+.caller{
+    background : white;
+    width  : 100%;
+    border : 1px solid grey;
+    display : flex;
+    flex-direction : row;
+    justify-content : space-between;
+    padding : 5px;
+    border-radius : 10px;
+}
+
+.caller .control{
+}

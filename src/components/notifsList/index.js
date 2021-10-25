@@ -24,7 +24,13 @@ export default class NotifsList extends React.Component {
         }
     }
     displayNotif  = (list) => {
-        return list.map( notif => <Notif notif={notif} key={notif.num_notification} num_user={this.props.session.num_user} socket={this.props.socket}/> );
+        return list.map( notif => <Notif 
+            notif={notif} 
+            key={notif.num_notification} 
+            num_user={this.props.session.num_user} 
+            socket={this.props.socket} 
+            deleteFromListToCall = {this.props.deleteFromListToCall}
+            addToListToCall = {this.props.addToListToCall}/> );
     }
 
 
@@ -39,6 +45,7 @@ export default class NotifsList extends React.Component {
             let newUnansweredNotifsList = notifsList.map( notif => ({
                 num_notification : notif.num_notification,
                 sender_username : notif.user_sender_username,
+                num_app_user_sender : notif.num_app_user_user,
                 probleme_type : notif.probleme_type,
                 probleme_code : notif.code,
                 statut_code : notif.statut,
@@ -75,6 +82,7 @@ export default class NotifsList extends React.Component {
             let newNotifsToday = notifsToday.map( notif => ({
                 num_notification : notif.num_notification,
                 sender_username : notif.user_sender_username,
+                num_app_user_sender : notif.num_app_user_user,
                 probleme_type : notif.probleme_type,
                 probleme_code : notif.code,
                 statut_code : notif.statut,
@@ -107,22 +115,30 @@ export default class NotifsList extends React.Component {
         } = this.state;
         let todayNotifsElement = notifsToday.map( notif =>{
             if( notif.num_intervention ) return (<NotifHistory key={notif.num_notification} notif = {notif} />);
-            else return (<Notif notif={notif} key={notif.num_notification} num_user={this.props.session.num_user} socket={this.props.socket}/> );
+            else return (<Notif 
+                notif={notif} 
+                key={notif.num_notification} 
+                num_user={this.props.session.num_user} 
+                socket={this.props.socket} 
+                deleteFromListToCall = {this.props.deleteFromListToCall}
+                addToListToCall = {this.props.addToListToCall}/> );
 
         });
         return (
             <div id="notifsList" onClick={this.onClickOnNotifsList}>
                 <p> Notifications recues {this.props.session.username} </p>
-                <FoldableDiv title={`non repondue : ${unansweredNotifsList.length}`}>
-                    <div id="scroll_list-notifsList">
-                        {this.displayNotif(this.state.unansweredNotifsList)}
-                    </div>
-                </FoldableDiv>
-                <FoldableDiv title={`Notifications d'aujourd'hui : ${notifsToday.length}`}folded={true}>
-                    <div id="scroll_list-notifsList">
-                        {todayNotifsElement}
-                    </div>
-                </FoldableDiv>
+                <div className="scroll_list">
+                    <FoldableDiv title={`non repondue : ${unansweredNotifsList.length}`}>
+                        <div id="scroll_list-notifsList">
+                            {this.displayNotif(this.state.unansweredNotifsList)}
+                        </div>
+                    </FoldableDiv>
+                    <FoldableDiv title={`Notifications recues aujourd'hui : ${notifsToday.length}`}folded={true}>
+                        <div id="scroll_list-notifsList">
+                            {todayNotifsElement}
+                        </div>
+                    </FoldableDiv>
+                </div>
             </div>
         );
     }

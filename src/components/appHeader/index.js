@@ -1,6 +1,6 @@
 import './index.css';
 import React, {Component} from 'react';
-import logo from './../../res/logo/base_logo_sans_texte_2.png';
+import logo from './../../res/logo/base_logo_4.png';
 import user from './../../res/icon/user.png';
 
 /*
@@ -18,7 +18,7 @@ export default class AppHeader extends Component {
                     <p> {this.props.session.username} </p>
                 </div>
                 <div className="logo-main">
-                    <img src={logo} alt="mndpt|acim"/>
+                    <img src={logo} alt="mndpt|acimi"/>
                 </div>
                 <div className="deconnecter">
                     <button onClick={this.props.logOut} className= "myButton"> se deconnecter </button>

@@ -76,7 +76,7 @@ export default class InterventionPage extends React.Component  {
        let {    num_intervention,
                 date_debut } = this.state.intervention;
         if (!date_debut) {
-            console.log('pas de date de debut mais problem OK');
+            console.log('pas de date de debut mais on va terminé');
         }
         console.log('resolu' , resolu);
         console.log('end intervention');

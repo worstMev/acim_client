@@ -105,6 +105,23 @@ export default class MyTask extends Component{
         //    console.log('intervention date -toDoList');
         //    this.props.socket.emit('get undone intervention');
         //});
+        this.props.socket.on('new intervention -myTask', () => {
+            this.props.socket.emit('get undone intervention' , this.props.session.num_user);
+            this.props.socket.emit('get pending intervention' , this.props.session.num_user);
+        });
+
+        this.props.socket.on('started intervention -myTask', (intervention) => {
+            console.log('started intervention -myTask');
+            this.props.socket.emit('get undone intervention' , this.props.session.num_user);
+            this.props.socket.emit('get pending intervention' , this.props.session.num_user);
+        });
+        
+        
+        this.props.socket.on('ended intervention -myTask', (intervention) => {
+            console.log('ended intervention -myTask');
+            this.props.socket.emit('get undone intervention' , this.props.session.num_user);
+            this.props.socket.emit('get pending intervention' , this.props.session.num_user);
+        });
     }
     
     componentDidUpdate () {

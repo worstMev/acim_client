@@ -29,7 +29,7 @@ export default class InterventionTimeline extends Component{
             start ,
             end ,
         } = this.props;
-        let id = uuidv4();
+        let id = uuidv4();//id of the InterventionTimeline
         //no need to ISOString anymore
         start = new Date(new Date(start).setHours(3,0,0));//all is converted to UTC when send to server , I don't know why xD
         //but we want to keep it local , so send local+3 , converted to UTC get local ( UTC = local - 3)
@@ -51,19 +51,26 @@ export default class InterventionTimeline extends Component{
             });
         });
 
-        this.props.socket.on('new intervention' , () => {
-            this.props.socket.emit('get agenda' ,start , end ,session.num_user);
+        this.props.socket.on('new intervention -interventionTimeline' , () => {
+            console.log('new intervention -interventionTimeline');
+            this.props.socket.emit('get agenda' , start , end , session.num_user ,id );
         });
          
-        this.props.socket.on('ended intervention' , () => {
-            this.props.socket.emit('get agenda' ,start , end ,session.num_user);
+        this.props.socket.on('ended intervention -interventionTimeline' , () => {
+            console.log('ended intervention -interventionTimeline');
+            this.props.socket.emit('get agenda' , start , end , session.num_user ,id );
         });
 
+//        this.props.socket.on('started intervention' , () => {
+//            this.props.socket.emit('get agenda' ,start , end ,session.num_user);
+//        });
     }
 
     componentWillUnmount(){
         console.log('InterventionTimeline unmount');
         this.props.socket.off('agenda -interventionTimeline');
+        this.props.socket.off('new intervention -interventionTimeline');
+        this.props.socket.off('ended intervention -interventionTimeline');
     }
 
     

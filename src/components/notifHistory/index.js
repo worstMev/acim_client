@@ -112,7 +112,7 @@ export default class Notif_history extends React.Component {
                         <p> {statut_libelle} </p>
                         <p> {lieu} </p>
                     </div>
-                    <button onClick={this.showDetails}> Details </button>
+                    <button onClick={this.showDetails} className="myButton"> Details </button>
                 </div>
                 { this.state.detailsAreShown &&
                     <div className="notif-details" style={detailStyle}>
@@ -126,7 +126,6 @@ export default class Notif_history extends React.Component {
                                 <button href="#" onClick={() => this.showInfoOf(num_intervention)}> {num_intervention} </button>
                             }
                         </p>
-                        <p> Details 1 </p>
                     </div>
                 }
             </div>

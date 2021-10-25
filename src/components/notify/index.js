@@ -1,16 +1,17 @@
 import './index.css';
 import React from 'react';
-import {  Switch , Route , Redirect, NavLink , useRouteMatch  } from 'react-router-dom'; 
-import NotifyHeader from './../notifyHeader';
+import {  Switch , Route , Redirect, NavLink , } from 'react-router-dom'; 
 import Ask from './../ask';
 import History from './../history';
 import InterventionNotification from './../interventionNotification';
 import InterventionPage from './../interventionPage';
 import AnnonceList from './../annonceList';
 import AppHeader from './../appHeader';
+import Called from './../called';
 import { mySocket } from './../../socket_io/socket_io';
 import flute_notif from './../../res/son/flute_notif.wav';
 import notifMessage from './../../res/son/notif1.wav';
+import Peer from 'peerjs';
 
 
 export default class Notify extends React.Component {
@@ -31,15 +32,48 @@ export default class Notify extends React.Component {
                 //},
 
             ],
+            callers : [],
             showSub : false,
+            showCall : false,
             numSelectedIntervention : null ,
         }
         this.socket = mySocket.socket;
+        this.myPeer = null;//is socket.id , we get it in get nb new annonce
         this.notify_notif_pop = React.createRef();
         this.message_notifs_pop = React.createRef();
         this.notifSound = new Audio(flute_notif);
         this.messageSound = new Audio(notifMessage);
         //this.sub_display = React.createRef();
+
+    }
+
+    addToCallers = (newItem) => {
+        let newCallers = this.state.callers.slice();
+        //only one per num_user
+        if( !newCallers.find( item => item.num_user === newItem.num_user )){
+            newCallers.push(newItem);//{num_user , username , call}
+            console.log('addToCallers , newCallers ', newCallers);
+            this.setState({
+                callers : newCallers,
+                showCall : true,
+            });
+        }else{
+            this.setState({
+                showCall : true,
+            });
+        }
+    }
+
+    deleteFromCallers = (itemToDelete) => {
+        let newCallers = this.state.callers.slice();
+        let indexToDelete = newCallers.findIndex( item => item.num_user === itemToDelete.num_user );
+        newCallers.splice(indexToDelete,1);
+        let newShowCall = this.state.showCall;
+        if(newCallers.length < 1) newShowCall = false;
+        this.setState({
+            callers : newCallers,
+            showCall : newShowCall,
+        });
 
     }
 
@@ -87,6 +121,8 @@ export default class Notify extends React.Component {
     componentDidMount() {
         //initialize a client socket io
         mySocket.connect( this.props.session.username , this.props.session.type_user , this.props.session.num_user );
+
+        console.log('notify mounted , socket id ', mySocket.id);
 
         this.socket.on('you have to disconnect', () => {
             this.props.logOut();
@@ -159,6 +195,69 @@ export default class Notify extends React.Component {
             console.log('updateAnnonce -notify');
             this.socket.emit('get nb new annonce', this.props.session.num_user , 'notify');
         });
+
+        this.socket.emit('get socket id');
+        this.socket.on('socket id' , (socket_id) => {
+            console.log('socket id',socket_id);
+            //init peer connection
+            this.myPeer = new Peer ( socket_id , {
+                host : '/',
+                path : '/peer/acim',
+                port : 3550,
+            });
+
+            this.myPeer.on('open' , (id) => {
+                console.log('connected to peerServer id ', id);
+                this.socket.emit('register peer id', this.props.session.num_user , id);
+            });
+
+            this.myPeer.on('error' , (err) => {
+                console.log('notify this.myPeer error' , err);
+            });
+
+
+            this.myPeer.on('call' , (call) => {
+                let usernameCaller = call.metadata.username;
+                let num_userCaller = call.metadata.num_user;
+                let newCaller = {
+                    call,
+                    username : usernameCaller,
+                    num_user : num_userCaller,
+                }
+                //add to callers and show call
+                this.addToCallers(newCaller);
+                
+               // navigator.mediaDevices.getUserMedia({audio : true})
+               //     .then((stream) =>{
+               //         this.myAudioStream = stream;
+               //         console.log('my stream ', this.myAudioStream);
+               //         call.answer(this.myAudioStream);
+               //         call.on('stream' , (streamBack) => {
+               //             let audio = new Audio();
+               //             audio.srcObject = streamBack;
+               //             audio.play();
+               //             console.log('accept this stream', streamBack);
+               //         });
+               //         call.on('close', () => {
+               //             console.log('call stopped');
+               //         });
+               //         call.on('error' , () => {
+               //             console.log('error in call');
+               //         });
+               //     });
+                //we accept in called
+                //call.answer();
+                //call.on('stream' , (stream) => {
+                //    console.log( usernameCaller +' is calling ,sending this ',stream);
+                //});
+                //
+                //call.on('close' , () => {
+                //    //not on firfox
+                //    console.log('call stopped');
+                //});
+            });
+        });
+
     }
 
     componentWillUnmount () {
@@ -169,7 +268,9 @@ export default class Notify extends React.Component {
         this.socket.off('notif from tech_main');
         this.socket.off('new annonce -notify');
         this.socket.off('nb new annonce -notify');
+        this.socket.off('socket id');
         this.socket.offAny();
+        this.myPeer.destroy();
         mySocket.disconnect();
     }
 
@@ -199,7 +300,11 @@ export default class Notify extends React.Component {
             numSelectedIntervention,
             newMessageNotifs,
             nbNewAnnonce,
+            showCall,
+            callers,
         } = this.state;
+        let callStyle;
+        let callersElement;
         let subStyle ;
         let tabDisplayStyle ;
         let subDisplayChildrenStyle;
@@ -223,6 +328,7 @@ export default class Notify extends React.Component {
             subStyle = {
                 background : 'black',
                 width : '0px',
+                display : 'none',
             };
             subDisplayChildrenStyle = {
                 display : 'none',
@@ -237,7 +343,21 @@ export default class Notify extends React.Component {
                         Nouvelle annonce de la DSI </p>;
             }
         });
-       //                <NotifyHeader {...this.props} logOut={this.logOut} showNotif={()=>this.showNotif(this.notify_notif_pop)}/>
+
+        if(showCall){
+            callStyle = {
+                left : '50px',
+            };
+            callersElement = callers.map( caller => 
+                <Called key = {caller.num_user} 
+                    caller={caller} 
+                    onClose={ () => this.deleteFromCallers(caller)}
+                    peer = {this.myPeer}
+                    socket={this.socket}/>
+            )
+        }else{
+
+        }
  
         return (
             <div className="notify_layout">
@@ -265,6 +385,9 @@ export default class Notify extends React.Component {
                     </div>
                     <div className="notify_notif_pop" ref={this.message_notifs_pop} >
                         {messageNotifDisplay}
+                    </div>
+                    <div className="call" style={callStyle} >
+                        {callersElement}
                     </div>
                 </div>
             </div>

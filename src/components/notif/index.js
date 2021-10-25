@@ -2,7 +2,12 @@ import './index.css';
 import React from 'react';
 import {Urgent} from './../../urgent.js';
 
-export default class ToDo extends React.Component {
+/*
+ * props :
+ * addToListToCall  : to trigger calls
+ */
+
+export default class Notif extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -34,10 +39,23 @@ export default class ToDo extends React.Component {
         this.notifRef.current.style.border = '2px solid green';
 
     }
+    call = ({username_user , num_app_user_user}) => {
+        //alert(`appeller ${username_user} avec num ${num_app_user_user}`);
+        //create a peer for the peerServer
+        let userToCall = { num_user : num_app_user_user , username : username_user };
+        this.props.addToListToCall(userToCall);
+    }
     render () {
         let {
             probleme_type,
             lieu,
+        } = this.props.notif;
+        let user = {
+            username_user : this.props.notif.sender_username,
+            num_app_user_user : this.props.notif.num_app_user_sender,
+        };
+        let {
+            sender_username,
         } = this.props.notif;
         let style;
         let sumStyle ;
@@ -123,7 +141,12 @@ export default class ToDo extends React.Component {
                         <div className="notif-command" >
                             <button className="myButton" onClick={()=> this.do()}>prendre en charge</button>
                             <button className="myButton" onClick={() => this.do(60)}>faire patienter</button>
-                            <button>ouvrir message</button>
+                            <button className="myButton" onClick={()=>this.call(user)}>Appeler</button>
+                        </div>
+                }
+                { this.state.isCalling &&
+                        <div>
+                            <p> Appeller {sender_username} </p>
                         </div>
                 }
             </div>

@@ -7,6 +7,7 @@
     width : 75%;
     height : fit-content;
     opacity : 0.9;
+    z-index : 3;
 }
 .notif_pop_notif{
     border : 1px solid black;
@@ -26,6 +27,22 @@
 .notif_pop_notif #notif_time{
     font-size : 0.5em;
     width : 25%;
+}
+
+.call_list{
+    position : absolute;
+    top : -1000px;
+    left : 186px;
+    transition : 0.5s;
+    width : 75%;
+    height : 200px;
+    border-radius : 10px;
+    padding : 10px;
+    opacity : 0.9;
+    z-index : 2;
+    background : lightgrey;
+    display : flex;
+    flex-direction : column;
 }
 
 .main_layout{
@@ -92,8 +109,14 @@
     .main_layout .side_bt{
         display : block;
         position : absolute;
-        bottom : 10px;
-        left : 10px;
+        bottom : 20px;
+        left : 20px;
+        z-index : 4;
+    }
+    .main_layout .side_bt button{
+        width : 40px;
+        height : 40px;
+        z-index : 4;
     }
     .main_display .side_nav .active_navLink{
         border-right : 4px solid red;

@@ -181,8 +181,8 @@ class App extends React.Component {
 
                     <Route path="/info">
                         <dl>
-                            <dt> a.c.i.m </dt>
-                            <dd> Application de Coordination des Interventions de Maintenance </dd>
+                            <dt> a.c.i.m.i </dt>
+                            <dd> Application de Coordination des Interventions de Maintenance Informatiques</dd>
                         </dl>
                     </Route>
 
