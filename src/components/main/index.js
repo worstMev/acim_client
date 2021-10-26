@@ -90,8 +90,10 @@ export default class Main extends React.Component{
         let newListToCall = this.state.listToCall.slice();
         let indexToDelete = newListToCall.findIndex( item => item.num_user === itemToDelete.num_user );
         newListToCall.splice(indexToDelete,1);
+       
         this.setState({
             listToCall : newListToCall,
+            showCall : (newListToCall.length > 0),
         });
 
     }

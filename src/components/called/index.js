@@ -122,6 +122,7 @@ export default class Called extends Component {
         }else{
             if(!micIsOk){
                 console.log('no mic');
+                this.ringtone.pause();
                 this.setState({
                     micIsOk : false,
                     indic : 'reception uniquement',
@@ -186,15 +187,19 @@ export default class Called extends Component {
 
     detectMic = async () => {
         try{
-            let devices = await navigator.mediaDevices.enumerateDevices();
-            console.log('devices',devices);
-            let micIsOk = (devices.find(item => item.kind === 'audioinput')) ? true : false;
-            console.log('detectMic micIsOk', micIsOk);
-            this.setState({
-                micIsOk,
-            });
+            if( navigator.mediaDevices ){
+                let devices = await navigator.mediaDevices.enumerateDevices();
+                console.log('devices',devices);
+                let micIsOk = (devices.find(item => item.kind === 'audioinput')) ? true : false;
+                console.log('detectMic micIsOk', micIsOk);
+                this.setState({
+                    micIsOk,
+                });
+            }else{
+                
+            }
         }catch(err){
-            console.log(err);
+            console.log('error in detectMic :',err);
             this.setState({
                 micIsOk : false,
             });
@@ -218,8 +223,8 @@ export default class Called extends Component {
             call.close();
         });
 
-        this.monitorConn.on('error' , () => {
-            console.log('monitorConn error');
+        this.monitorConn.on('error' , (err) => {
+            console.log('monitorConn error' ,err);
             this.ringtone.pause();
         });
 
