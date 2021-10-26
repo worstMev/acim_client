@@ -20,7 +20,6 @@ export default class Notify extends React.Component {
         this.state = {
             nbNewNotifs : 0,
             notifsList : [
-                
             ],
             nbNewAnnonce : 0,
             newMessageNotifs : [
@@ -136,7 +135,7 @@ export default class Notify extends React.Component {
             });
         });
 
-        this.socket.on('notif from tech_main' , ({tech_main_username , probleme_type , date_envoie  ,lieu ,num_notification, date_programme}) => {
+        this.socket.on('notif from tech_main' , ({tech_main_username , probleme_type , date_envoie  ,lieu ,num_notification, date_programme , date_reponse}) => {
             console.log('notif from tech_main' , tech_main_username , probleme_type , date_envoie  );
             let date_envoie_formatted = new Date(date_envoie).toLocaleString('fr-FR');
             //show notif saying a sentence
@@ -146,6 +145,7 @@ export default class Notify extends React.Component {
                 lieu,
                 date_envoie_formatted : date_envoie_formatted,
                 date_envoie,
+                date_reponse,
                 date_programme : new Date(date_programme).toLocaleString('fr-FR'),
                 text : `${tech_main_username} arrive pour le probleme : " ${probleme_type} " lieu : ${lieu} - notifie le ${date_envoie_formatted} `,
                 key : num_notification,
@@ -155,7 +155,7 @@ export default class Notify extends React.Component {
             newNotifsList.unshift(notif);
             newNotifsList = newNotifsList.filter( item => {
                 let now_10 = new Date().getTime() - (10*60*1000);
-                let date_notif = new Date(item.date_envoie).getTime();
+                let date_notif = new Date(item.date_reponse).getTime();
                 if(date_notif < now_10 ) return false;
                 else return true;
             });

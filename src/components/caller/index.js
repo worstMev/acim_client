@@ -212,8 +212,8 @@ export default class Caller extends Component {
             num_user ,
         } = userToCall;
         isConnected = (isConnected && peerIds.length);
-        let button = (<button onClick = {this.startCall}> Appeler </button>);
-        if (isCalling) button = (<button onClick = {this.stopCall}> Raccrocher </button>);
+        let button = (<button className="myButton green" onClick = {this.startCall}> Appeler </button>);
+        if (isCalling) button = (<button className="myButton" onClick = {this.stopCall}> Raccrocher </button>);
         return (
             <div className= "caller">
                 <p> Appeler : {username} {(isConnected)? 'est connecté' : 'est hors-connexion'} </p>

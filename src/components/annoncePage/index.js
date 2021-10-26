@@ -42,7 +42,7 @@ export default function AnnoncePage(props){
                         value={contenu} 
                         onChange={(e)=>setContenu(e.target.value) }>
                     </textarea>
-                    <button> Publier </button>
+                    <button className="myButton"> Publier </button>
                 </form>
             </div>
         </div>

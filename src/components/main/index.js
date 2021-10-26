@@ -487,11 +487,13 @@ export default class Main extends React.Component{
                         {this.showNewMessageNotifs()}
                     </div>
                     <div className="call_list" style={callListStyle}>
-                        <div>
-                            <p> Call list </p>
+                        <div className="header">
+                            <p> Appels : </p>
                             <button onClick = {()=> this.setState({showCall : false})}> X </button>
                         </div>
-                        {callElements}
+                        <div className="scroll_list">
+                            {callElements}
+                        </div>
                     </div>
                     <div className="side_bt">
                         <button onClick={this.showNav}> ... </button>

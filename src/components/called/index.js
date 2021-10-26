@@ -56,6 +56,7 @@ export default class Called extends Component {
                         //console.log( 'streamBack tracks ', streamBack.getTracks());
                         this.setState({
                             callOk : true,
+                            indic : 'connecté !'
                         });
                     });
                     call.on('close', () => {
@@ -118,6 +119,50 @@ export default class Called extends Component {
                     });
                 });
                 
+        }else{
+            if(!micIsOk){
+                console.log('no mic');
+                this.setState({
+                    micIsOk : false,
+                    indic : 'reception uniquement',
+                });
+
+                this.monitorConn.send('Connecté ,le micro du recepteur ne marche pas');
+                
+                //one way communication
+                call.answer();
+                //establish a peer datathis.monitorConnection
+                //call.peer is peer id of caller , and it is unique so one possibility th peer in caller
+
+                
+               
+                call.on('stream' , (streamBack) => {
+                    let audio = new Audio();
+                    audio.srcObject = streamBack;
+                    audio.play();
+                    console.log('accept this stream', streamBack);
+                    console.log('caller Stream', streamBack);
+                    //console.log( 'streamBack tracks ', streamBack.getTracks());
+                    this.setState({
+                        callOk : true,
+                    });
+                });
+                call.on('close', () => {
+                    console.log('close the call in callED');
+                    console.log('fin appel de', this.props.caller.username);
+                    console.log('stop stream' ,this.myAudioStream);
+                    if(this.myAudioStream) this.myAudioStream.getTracks().forEach(track => track.stop());
+                    this.props.caller.call.close();
+                    //suppress the called
+                    this.setState({
+                        callOk : false,
+                    });
+                    this.monitorConn.close();
+                });
+                call.on('error' , () => {
+                    console.log('error in call');
+                });
+            }
         }
         
         

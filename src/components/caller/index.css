@@ -5,9 +5,16 @@
     display : flex;
     flex-direction : row;
     justify-content : space-between;
+    align-items : center;
     padding : 5px;
     border-radius : 10px;
 }
 
 .caller .control{
 }
+
+.caller .control .green:hover {
+    background : green;
+}
+
+
