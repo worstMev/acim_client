@@ -3,6 +3,7 @@ import React , { Component } from 'react';
 import green_dot from './../../res/icon/green_dot.png';
 import red_dot from './../../res/icon/red_dot.png';
 import yellow_dot from './../../res/icon/yellow_dot.png';
+import TimeHourMinute from './../timeHourMinute';
 
 /*
  * props:
@@ -77,7 +78,7 @@ export default class InterventionSimple extends Component {
                         {doneElement}
                     </div>
                     <div className="text">
-                    <p> { heure_programme }  >{ libelle_intervention_type } - { libelle_lieu } par { tech_main_username } </p>
+                    <p>  <TimeHourMinute date={date_programme} /> >{ libelle_intervention_type } - { libelle_lieu } par { tech_main_username } </p>
                     </div>
                 </div>
                 <div className="menu" style={menuStyle}>

@@ -10,3 +10,9 @@
 .side-InterventionHistory{
     width : 25%;
 }
+
+.main-InterventionHistory{
+    display : flex;
+    flex-direction : column;
+    width : 75%;
+}

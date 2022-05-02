@@ -1,0 +1,26 @@
+.paginer{
+    display : flex;
+    width : 100%;
+    flex-direction : row;
+    justify-content : space-around;
+}
+.paginer > p {
+    width : 25%;
+}
+
+.range{
+    display : flex;
+    flex-direction : row;
+    width : 40%;
+}
+
+.page{
+    display : flex;
+    flex-direction : row;
+    margin : 0 2px;
+}
+
+.box-page{
+    border : 1px solid black;
+    margin : 0 2px;
+}

@@ -52,7 +52,7 @@ export default class NotifsList extends React.Component {
                 statut_libelle : notif.statut_libelle,
                 lieu : notif.lieu,
                 remarque : notif.remarque,
-                date_envoie : new Date(notif.date_envoie).toLocaleString('fr-FR'),
+                date_envoie : notif.date_envoie,
                 
             }));
             if(this.props.setNbNewNotif) {
@@ -89,11 +89,11 @@ export default class NotifsList extends React.Component {
                 statut_libelle : notif.statut_libelle,
                 lieu : notif.lieu,
                 remarque : notif.remarque,
-                date_envoie : new Date(notif.date_envoie).toLocaleString('fr-FR'),
+                date_envoie : notif.date_envoie, 
                 num_app_user_tech_main : notif.num_app_user_tech_main,
-                date_reponse : new Date(notif.date_reponse).toLocaleString('fr-FR'),
+                date_reponse : notif.date_reponse,
                 num_intervention : notif.num_intervention,
-                date_programme : new Date(notif.date_programme).toLocaleString('fr-FR'),
+                date_programme : notif.date_programme,
                 tech_main_username : notif.tech_main_username,
             }));
             this.setState({

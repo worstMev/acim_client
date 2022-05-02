@@ -47,8 +47,10 @@ export default class Login extends React.Component {
                     });
                     //console.log(' type_user from server '+ response.type_user);
                     let computedHash_USER = await computeHmac(User.USER.code, response.username);
+                    let computedHash_ADMIN = await computeHmac(User.ADMIN.code,response.username);
                     let computedHash_TECH_MAIN = await computeHmac(User.TECH_MAIN.code, response.username);
                     if ( response.type_user === computedHash_USER ) this.props.history.push('/notify');
+                    if ( response.type_user === computedHash_ADMIN ) this.props.history.push('/admin');
                     if( response.type_user === computedHash_TECH_MAIN ) this.props.history.push('/acim');
                 }
             }catch(err){

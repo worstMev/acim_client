@@ -1,0 +1,40 @@
+.adminPage{
+    height : 100%;
+    width : 100%;
+    display : flex;
+    flex-direction : column;
+    justify-content : flex-start;
+}
+
+
+.adminPage .appHeader{
+    height : 6%;
+}
+
+.adminPage .display{
+    border : 1px solid red;
+    height : 94%;
+    display : flex;
+    flex-direction : row;
+    padding : 0;
+}
+
+.adminPage .display .nav{
+    border : 1px solid purple;
+    width : 15%;
+    height : 100%;
+    padding-left: 10px;
+    padding-top: 20px;
+    background : #80808017;
+    display : flex;
+    flex-direction : column;
+
+}
+
+.adminPage .display .main{
+    border : 1px solid blue;
+    width : 85%;
+    height : 100%;
+    display : flex ;
+    flex-direction : column;
+}

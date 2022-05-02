@@ -14,7 +14,7 @@ export default class AppHeader extends Component {
         return(
             <div className="appHeader">
                 <div className="username">
-                    <img className="user_logo" src={user} />
+                    <img className="user_logo" src={user} alt="user_pic" />
                     <p> {this.props.session.username} </p>
                 </div>
                 <div className="logo-main">

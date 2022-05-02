@@ -8,7 +8,8 @@ import { generateDocx } from './../../generateDocx/generate.js';
  * props :
  * -num_intervention : to create the decharge on db
  * -socket to query data on materielsSelector
- * -downloadDecharge : method to download
+ * -downloadDecharge : method to download --not used
+ * -downloadDechargeDoc : method to download --not used
  */
 export default function InterventionDecharge(props){
     //materiels are num_materiels
@@ -23,7 +24,7 @@ export default function InterventionDecharge(props){
     let control ;
     let disabled ;
 
-    let title = 'Effectuer un decharge';
+    let title = 'Effectuer une décharge';
     if(num_decharge){
         title = `ID decharge : ${num_decharge}` ;
         style = {

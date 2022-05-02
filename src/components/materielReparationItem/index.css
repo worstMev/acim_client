@@ -1,0 +1,15 @@
+.materielReparationItem{
+    display : flex;
+    flex-direction : row;
+    border : 1px solid black;
+    margin : 5px;
+    padding : 5px;
+    width : 85%;
+}
+
+.materielReparationItem p{
+    width : 22%;
+}
+.materielReparationItem button{
+    width : 12%;
+}

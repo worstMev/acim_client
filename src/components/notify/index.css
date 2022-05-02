@@ -91,8 +91,8 @@
     bottom : 50px;
     left : -10050px;
     transition : 0.5s;
-    border : 1px solid black;
-    background : green;
+    background : lightgrey;
+    border-radius : 10px;
     padding : 10px;
     overflow : auto;
 }

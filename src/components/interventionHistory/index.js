@@ -2,6 +2,7 @@ import './index.css';
 import React, {Component} from 'react';
 import InterventionHistoryControl from './../interventionHistoryControl';
 import InterventionHistoryAffichage from './../interventionHistoryAffichage';
+import Paginer from './../paginer';
 
 
 
@@ -9,6 +10,9 @@ export default class InterventionHistory extends Component {
     constructor(props){
         super(props);
         this.state = {
+            itemPerPage : 10,
+            currentPage : 1,
+            maxItem : 0,//number max of intervention
             tech_main : { num: 'nd' , username : 'nd'},
             date_debut :new Date(new Date().setFullYear(2020,0,1)) ,
             date_fin : new Date(new Date().setHours(23,59,59)),
@@ -17,6 +21,18 @@ export default class InterventionHistory extends Component {
             num_intervention : '',//no nd cause we add % and then it is not nd
             num_intervention_type : 'nd',
         };
+    }
+    setCurrentPage = (newPage) => {
+        console.log('set current page to '+ newPage);
+        let {
+            maxItem,
+            itemPerPage,
+        }= this.state;
+        let maxPage = Math.ceil(maxItem / itemPerPage);
+        if( newPage <= 0 || newPage > maxPage ) return;
+        this.setState({
+            currentPage : newPage,
+        });
     }
     setTechMain = (tech) => {
         console.log('setTechMain', tech);
@@ -68,6 +84,7 @@ export default class InterventionHistory extends Component {
             || prevState.statut.probleme_resolu !== this.state.statut.probleme_resolu
             || prevState.num_intervention !== this.state.num_intervention
             || prevState.num_intervention_type !== this.state.num_intervention_type
+            || prevState.currentPage !== this.state.currentPage
         ){
             console.log('emit again');
             let num_intervention;
@@ -75,7 +92,7 @@ export default class InterventionHistory extends Component {
                 //add '%' for the LIKE comparisson
                 num_intervention = `%${this.state.num_intervention}%`;
             }
-            this.props.socket.emit('get intervention history', this.state.tech_main.num,this.state.date_debut , this.state.date_fin , this.state.statut , this.state.num_intervention_type ,num_intervention);
+            this.props.socket.emit('get intervention history', this.state.tech_main.num,this.state.date_debut , this.state.date_fin , this.state.statut , this.state.num_intervention_type ,num_intervention, this.state.currentPage , this.state.itemPerPage);
         }
     };
     componentDidMount(){
@@ -84,8 +101,10 @@ export default class InterventionHistory extends Component {
            tech_main,
            date_fin,
            statut,
+           currentPage,
+           itemPerPage,
        } = this.state;
-       this.props.socket.emit('get intervention history', tech_main.num ,null , date_fin , statut,null , null);
+       this.props.socket.emit('get intervention history', tech_main.num ,null , date_fin , statut,null , null ,currentPage , itemPerPage );
         //num_intervention use LIKE %...%
        this.props.socket.emit('get oldest intervention date');
         this.props.socket.on('oldest intervention date', (minDate) => {
@@ -93,8 +112,8 @@ export default class InterventionHistory extends Component {
                 date_debut : new Date(minDate),
             });
         });
-        this.props.socket.on('intervention history', (interventions ) => {
-            console.log('intervention history', interventions );
+        this.props.socket.on('intervention history', (interventions, number ) => {
+            console.log('intervention history', interventions,number );
             let newInterventionList = interventions.map( (item, index)=> ({
                 num_intervention : item.num_intervention,
                 num_intervention_pere : item.num_intervention_pere,
@@ -116,6 +135,7 @@ export default class InterventionHistory extends Component {
 
             this.setState({
                 interventionList : newInterventionList,
+                maxItem : number,
             });
         });
 
@@ -127,6 +147,9 @@ export default class InterventionHistory extends Component {
 
     render(){
         let {
+            currentPage,
+            maxItem,
+            itemPerPage,
             tech_main,
             statut,
             date_debut,
@@ -135,6 +158,7 @@ export default class InterventionHistory extends Component {
             num_intervention,
             num_intervention_type,
         } = this.state;
+        let maxPage = Math.ceil(maxItem/itemPerPage);
         return (
             <div className="interventionHistory">
                 <div className="side-InterventionHistory">
@@ -155,14 +179,18 @@ export default class InterventionHistory extends Component {
                         />
                         
                 </div>
-                <InterventionHistoryAffichage 
-                    tech_main_username = {tech_main.username}
-                    date_debut = {date_debut.toLocaleDateString()}
-                    date_fin = {date_fin.toLocaleDateString()}
-                    interventions = {interventionList}
-                    statut={statut}
-                    showSub={this.props.showSub}
-                    />
+                <div className="main-InterventionHistory">
+                    <InterventionHistoryAffichage 
+                        tech_main_username = {tech_main.username}
+                        date_debut = {date_debut.toLocaleDateString()}
+                        date_fin = {date_fin.toLocaleDateString()}
+                        interventions = {interventionList}
+                        maxItem = {maxItem}
+                        statut={statut}
+                        showSub={this.props.showSub}
+                        />
+                    <Paginer currentPage ={currentPage} maxPage={maxPage} setPage = { this.setCurrentPage } />
+                </div>
             </div>
         );
     }

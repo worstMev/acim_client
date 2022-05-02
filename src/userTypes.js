@@ -8,6 +8,10 @@ export const User = {
         text : 'utilisateur',
         code : 'USER',
     },
+    ADMIN : {
+        text : 'admin',
+        code :  'ADMIN',
+    },
     DASH : { 
         text : 'tableau de bord',
         code : 'DASH',

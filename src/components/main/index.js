@@ -18,6 +18,7 @@ import BigAgenda from './../bigAgenda';
 import AnnoncePage from './../annoncePage';
 import AppHeader from './../appHeader';
 import RapportActivite from './../rapportActivite';
+import MaterielReparation from './../materielReparation';
 import Caller from './../caller';
 import notif1 from './../../res/son/correct_notif.wav';
 import notifMessage from './../../res/son/notif1.wav';
@@ -516,6 +517,7 @@ export default class Main extends React.Component{
                             <NavLink activeClassName="active_navLink"  to={`${url}/notifsHistory`} onClick={this.closeSub}>Historiques des notifications</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/interventionHistory`} onClick={this.closeSub}>Historiques des interventions</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/rapport`} onClick={this.closeSub}>{`Rapport d'activité`}</NavLink>
+                            <NavLink activeClassName="active_navLink"  to={`${url}/materielReparation`} onClick={this.closeSub}>{`Matériels en réparation`}</NavLink>
                         </nav>
                             <div className="main-tabDisplay" style={mainTabStyle} onClick = {this.closeNav}>
                                 <div className="display" style={displayStyle}>
@@ -655,6 +657,12 @@ export default class Main extends React.Component{
                                                 />
                                         }/>
 
+                                        <Route path={`${path}/materielReparation`} render = {
+                                            (routeProps) => <MaterielReparation 
+                                                session = {this.props.session}
+                                                socket = {this.socket}
+                                                />
+                                        }/>
                                     </Switch>
                                 </div>
                                 <div className="sub-display" style={subStyle}>

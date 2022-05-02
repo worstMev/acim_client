@@ -1,7 +1,15 @@
 .called{
     background : white;
+    width  : 100%;
+    border : 1px solid grey;
     display : flex;
     flex-direction : row;
     justify-content : space-between;
-    padding : 10px;
+    align-items : center;
+    padding : 5px;
+    border-radius : 10px;
+}
+
+.called .control .green:hover {
+    background : green;
 }

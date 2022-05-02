@@ -47,7 +47,7 @@ export default class ActiveUsers extends Component {
                 connectedList : connected_tech_mains,
             });
             //update the active of the selectedUser
-            let newSelectedUser = { ... this.props.selectedUser};
+            let newSelectedUser = { ...this.props.selectedUser};
             newSelectedUser.active = connected_tech_mains.includes(this.props.selectedUser.num_user);
             this.updateSelectedNumUser(newSelectedUser);
         });

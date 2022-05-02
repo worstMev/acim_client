@@ -223,6 +223,10 @@ export default class Called extends Component {
             call.close();
         });
 
+        this.monitorConn.on('open' , () => {
+            console.log('monitorConn is opened');
+        });
+
         this.monitorConn.on('error' , (err) => {
             console.log('monitorConn error' ,err);
             this.ringtone.pause();
@@ -264,9 +268,9 @@ export default class Called extends Component {
             caller,
         } = this.props;
 
-        let button = (<button onClick={this.stopCall}> Raccrocher </button>) ;
+        let button = (<button onClick={this.stopCall} className="myButton"> Raccrocher </button>) ;
         if(!callOk){
-            button =(<button onClick={this.acceptCall}> Accepter </button>);
+            button =(<button onClick={this.acceptCall} className="myButton green"> Accepter </button>);
         }
         
         return(

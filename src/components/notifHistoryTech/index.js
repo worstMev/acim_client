@@ -1,6 +1,7 @@
 import './index.css';
 import React from 'react';
 import { Urgent } from './../../urgent.js';
+import DateHourMinute from './../dateHourMinute';
 
 export default class NotifHistoryTech extends React.Component {
     constructor(props){
@@ -93,7 +94,7 @@ export default class NotifHistoryTech extends React.Component {
                     </div>
                     <div className="date_envoie">
                         <p> Date d'envoie : </p>
-                        <p> {this.props.notif.date_envoie} </p>
+                        <p> <DateHourMinute date={this.props.notif.date_envoie}/> </p>
                     </div>
                     <button className="myButton" onClick={this.showDetails}> Details </button>
                 </div>
@@ -102,7 +103,7 @@ export default class NotifHistoryTech extends React.Component {
                         <p> remarque: {this.props.notif.remarque} </p>
                         <p> envoyee par : {this.props.notif.user_sender_username} </p>
                         <p> prise en charge par : {this.props.notif.tech_main_username}  </p>
-                        <p> repondue le : {this.props.notif.date_reponse} </p>
+                        <p> repondue le : <DateHourMinute date={this.props.notif.date_reponse}/> </p>
                         <p> ID notification : {this.props.notif.num_notification} </p>
                     </div>
                 }

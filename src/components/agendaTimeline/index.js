@@ -1,6 +1,5 @@
 import './index.css';
 import React , { Component } from 'react';
-import InterventionSimple from './../interventionSimple';
 import InterventionTimeline from './../interventionTimeline';
 
 /*
@@ -86,7 +85,7 @@ function AgendaDay(props){
     let{
         date,
         listInterv,
-        selectedInterv,
+        //selectedInterv,
     } = props;
 
     //get date in format yyyy-mm-dd

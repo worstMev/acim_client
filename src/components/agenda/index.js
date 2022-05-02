@@ -1,5 +1,5 @@
 import './index.css';
-import React , { Component , useState} from 'react';
+import React , { Component , } from 'react';
 import InterventionSimple from './../interventionSimple';
 /*
  * props:
@@ -184,7 +184,7 @@ function AgendaDay(props){
     }
 
     let intervs = listInterv.map( interv =>{
-        let heure = new Date(interv.date_programme).getHours();
+        //let heure = new Date(interv.date_programme).getHours();
         let style ;
         if ( selectedInterv.num_intervention === interv.num_intervention ) {
             style = {

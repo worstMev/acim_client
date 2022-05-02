@@ -1,6 +1,13 @@
 import './index.css'
 import React , { Component } from 'react';
 
+/*
+ * props :
+ * - children : what's folded and unfolded
+ * - title : what's seen on top
+ * - titleStyle 
+ * - folded
+ */
 export default class FoldableDiv extends Component {
     constructor(props){
         super(props);

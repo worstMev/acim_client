@@ -2,6 +2,7 @@ import './index_new.css';
 import vertical_dot from './../../res/icon/vertical-dots.png';
 import React from 'react';
 import FoldableDiv from './../foldableDiv';
+import TimeHourMinute from './../timeHourMinute';
 import green_dot from './../../res/icon/green_dot.png';
 import red_cross from './../../res/icon/cross.png';
 import check from './../../res/icon/check.png';
@@ -176,7 +177,7 @@ export default class Intervention extends React.Component {
                     <p> Type : {libelle_intervention_type} - {commentaire} </p>
                     <p> Motif : {motif} </p>
                     <p> Lieu : {libelle_lieu} </p>
-                    <p> Crèèe par : {tech_main_username} </p>
+                    <p> Créée par : {tech_main_username} </p>
                     <p> ID intervention : {num_intervention} </p>
                     <p> Probleme constaté : { (libelle_probleme_tech_type) ? libelle_probleme_tech_type : 'ND'} </p>
                     <p> { (done) ? 'EFFECTUE' : 'NON-EFFECTUE' } et {(probleme_resolu) ? 'RESOLU' : 'NON-RESOLU' } </p>
@@ -204,7 +205,7 @@ export default class Intervention extends React.Component {
                             {new Date(date_programme).toLocaleDateString('fr-FR')} 
                         </div>
                         <div className="hour">
-                            {new Date(date_programme).toLocaleTimeString('fr-FR', {hour : '2-digit' , minute : '2-digit'})}
+                            <TimeHourMinute  date = {date_programme} />
                         </div>
                     </div>
                     <div className="info" style={infoStyle}>

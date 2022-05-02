@@ -23,9 +23,9 @@ export default class NotifsHistory extends React.Component {
                 statut_code : notif.statut,
                 statut_libelle : notif.statut_libelle,
                 remarque : notif.remarque || '-' ,
-                date_envoie : new Date(notif.date_envoie).toLocaleString('fr-FR'),
+                date_envoie : notif.date_envoie, 
                 tech_main_username : notif.tech_main_username || '-',
-                date_reponse : (notif.date_reponse) ? new Date(notif.date_reponse).toLocaleString('fr-FR') : '-' ,
+                date_reponse : notif.date_reponse,
             }));
             console.log('newNotifsTab' , newNotifsTab);
             this.setState({

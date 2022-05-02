@@ -1,6 +1,7 @@
 import './index.css';
 import React from 'react';
 import { Urgent } from './../../urgent';
+import DateHourMinute from './../dateHourMinute';
 /*
  * props:
  * - notif : probleme_type , code, statut_libelle, lieu, date_envoie, remarque, tech_main_username, date_reponse, num_notification, num_intervention , date_programme ,
@@ -97,12 +98,13 @@ export default class Notif_history extends React.Component {
             num_intervention ,
             date_programme ,
         } = this.props.notif;
+        remarque = (remarque) ? remarque : '-';
         return (
             <div className="notif_history" style={style} >
                 <div className="notif_history-sum" style={sumStyle}>
                     <div className="date_envoie">
                         <p> Date d'envoie : </p>
-                        <p> {date_envoie} </p>
+                        <DateHourMinute date={date_envoie}/>
                     </div>
                     <div className="probleme_type" >
                         <p> {probleme_type} </p>
@@ -116,16 +118,20 @@ export default class Notif_history extends React.Component {
                 </div>
                 { this.state.detailsAreShown &&
                     <div className="notif-details" style={detailStyle}>
-                        <p> Intervention de {tech_main_username} le {date_programme} </p>
-                        <p> remarque: {remarque} </p>
-                        <p> prise en charge par : {tech_main_username}  </p>
-                        <p> repondue le : {date_reponse} </p>
+                        { num_intervention && 
+                            <>
+                            <p> Intervention de {tech_main_username} le <DateHourMinute date={date_programme}/> </p>
+                            <p> ID intervention : 
+                                { (num_intervention !== 'nd') &&
+                                    <button href="#" onClick={() => this.showInfoOf(num_intervention)}> {num_intervention} </button>
+                                }
+                            </p>
+                            <p> prise en charge par : {tech_main_username}  </p>
+                            <p> repondue le :<DateHourMinute date={date_reponse}/> </p>
+                            </>
+                        }
                         <p> ID notification : {num_notification} </p>
-                        <p> ID intervention : 
-                            { (num_intervention !== 'nd') &&
-                                <button href="#" onClick={() => this.showInfoOf(num_intervention)}> {num_intervention} </button>
-                            }
-                        </p>
+                        <p> remarque: {remarque} </p>
                     </div>
                 }
             </div>

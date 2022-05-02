@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import Login from './components/login';
+import AdminPage from './components/adminPage';
 import Layout from './components/layout';
 import Main from './components/main';
 import Notify from './components/notify';
@@ -19,6 +20,7 @@ class App extends React.Component {
             type_user : localStorage.getItem('type_user')|| null,
             t_u: null,
             t_t: null,
+            t_a : null,
         }
         this.computedHash_USER = null;
         this.computedHash_TECH_MAIN = null;
@@ -52,15 +54,18 @@ class App extends React.Component {
         console.log('======= APP component did mount , state ' , this.state);
         let computedHash_USER;
         let computedHash_TECH_MAIN;
+        let computedHash_ADMIN;
         let lastLogged = (localStorage.getItem('logged') === 'true');
         if( lastLogged ) {
             console.log('compute hmac for user , tech_main');
             computedHash_USER       = await computeHmac(User.USER.code, this.state.username);
+            computedHash_ADMIN       = await computeHmac(User.ADMIN.code,this.state.username);
             computedHash_TECH_MAIN  = await computeHmac(User.TECH_MAIN.code, this.state.username);
             console.log(' after compute ' , computedHash_USER , computedHash_TECH_MAIN);
             this.setState({
                 t_u : computedHash_USER,
                 t_t : computedHash_TECH_MAIN,
+                t_a : computedHash_ADMIN,
             });
         }
         
@@ -73,6 +78,7 @@ class App extends React.Component {
             console.log('compute hmac for user , tech_main');
             let computedHash_USER;
             let computedHash_TECH_MAIN;
+            let computedHash_ADMIN ;
             if( !nextState.logged ) {
                 //nextState is not logged , we are disconnecting
                 //no need to compute just nullify
@@ -81,11 +87,13 @@ class App extends React.Component {
 
             }else{
                 computedHash_USER       = await computeHmac(User.USER.code,nextState.username);
+                computedHash_ADMIN       = await computeHmac(User.ADMIN.code,nextState.username);
                 computedHash_TECH_MAIN  = await computeHmac(User.TECH_MAIN.code, nextState.username);
             }
             console.log(' after compute ' , computedHash_USER , computedHash_TECH_MAIN);
             this.setState({
                 t_u : computedHash_USER,
+                t_a : computedHash_ADMIN,
                 t_t : computedHash_TECH_MAIN,
             });
         }else{
@@ -109,12 +117,13 @@ class App extends React.Component {
         const determineRootRedirect = () => { 
             console.log('==== determineRootRedirect function ');
             console.log( 'state in determineRootRedirect ', this.state);
-            console.log(' computedhash ' , this.state.t_u , this.state.t_t);
+            console.log(' computedhash ' , this.state.t_u , this.state.t_t , this.state.t_a);
             
             if(this.state.logged){
                 console.log(' logged');
                 if(this.state.type_user === this.state.t_u) return '/notify';
                 if(this.state.type_user === this.state.t_t) return '/acim';
+                if(this.state.type_user === this.state.t_a) return '/admin';
             }
             console.log('no logged');
             console.log('==== end determineRootRedirect ');
@@ -151,6 +160,18 @@ class App extends React.Component {
                                     }
                     />
 
+                    <ProtectedRoute path="/admin"
+                                    conditionIn={ () => {
+                                        if( this.state.logged && this.state.type_user === this.state.t_a) return true;
+                                        else return false;
+                                    }}
+                                    render={ (routeProps) => 
+                                        <AdminPage { ... routeProps } session={session} logOut={this.logOut} />
+                                    }
+                                    redirectRender={ (routeProps) =>
+                                        <Redirect to={redirectTo}/>
+                                    }
+                    />
 
                     <ProtectedRoute path="/acim"
                                     conditionIn={ () => {

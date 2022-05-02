@@ -1,6 +1,7 @@
 import './index.css';
 import React from 'react';
 import {Urgent} from './../../urgent.js';
+import DateHourMinute from './../dateHourMinute';
 
 /*
  * props :
@@ -123,7 +124,7 @@ export default class Notif extends React.Component {
                     </div>
                     <div className="date_envoie">
                         <p> Date d'envoie : </p>
-                        <p> {this.props.notif.date_envoie} </p>
+                        <DateHourMinute date = {this.props.notif.date_envoie} />
                     </div>
                     <button className="myButton" onClick={this.showDetails}> Details </button>
                     <button className="myButton" onClick={this.showCommand}> repondre </button>
@@ -142,11 +143,6 @@ export default class Notif extends React.Component {
                             <button className="myButton" onClick={()=> this.do()}>prendre en charge</button>
                             <button className="myButton" onClick={() => this.do(60)}>faire patienter</button>
                             <button className="myButton" onClick={()=>this.call(user)}>Appeler</button>
-                        </div>
-                }
-                { this.state.isCalling &&
-                        <div>
-                            <p> Appeller {sender_username} </p>
                         </div>
                 }
             </div>

@@ -8,6 +8,8 @@ import Intervention from './../intervention';
  * -date_debut
  * -date_fin
  * -statut
+ * -interventions
+ * -maxItem
  */
 
 export default class InterventionHistoryAffichage extends Component {
@@ -27,6 +29,7 @@ export default class InterventionHistoryAffichage extends Component {
             date_debut,
             date_fin,
             interventions,
+            maxItem,
         } = this.props;
         let statut_text;
         let date_text;
@@ -54,7 +57,7 @@ export default class InterventionHistoryAffichage extends Component {
                 <div className="interventionHistoryAffichage-text">
                     <p> Intervention {statut_text}  {tech_main_username_text}</p>
                     <p> du {date_text}</p>
-                    <p> Nombre : {interventions.length} </p>
+                    <p> Nombre : {maxItem} </p>
                 </div>
                 <div className="scroll_list">
                     {this.displayInterventions(interventions)}

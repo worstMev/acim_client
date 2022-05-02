@@ -1,6 +1,7 @@
 import './index.css';
 import React , { Component } from 'react';
 import check from './../../res/icon/check.png';
+import Paginer from './../paginer';
 
 /*
  * props:
@@ -13,18 +14,27 @@ export default class AnnonceList extends Component{
         super(props);
         this.state = {
             annonces : [],
+            itemPerPage : 10,
+            currentPage : 1,
+            maxItem : 0,//number max of annonce
+
         };
         this.myScroll = React.createRef();
     }
     componentDidMount(){
         console.log('annonceList mounted');
-        this.props.socket.emit('get annonce' , this.props.session.num_user);
+        let{
+            itemPerPage,
+            currentPage,
+        } = this.state;
+        this.props.socket.emit('get annonce' , this.props.session.num_user , itemPerPage,currentPage );
         
-        this.props.socket.on('annonces -annonceList', (annonces) => {
-            console.log('annonces -annonceList', annonces);
+        this.props.socket.on('annonces -annonceList', (annonces, nb) => {
+            console.log('annonces -annonceList', annonces ,nb);
             annonces.reverse();
             this.setState({
                 annonces : annonces,
+                maxItem : nb,
             });
             this.scrollDown();
         });
@@ -63,8 +73,28 @@ export default class AnnonceList extends Component{
         if( unseenAnnonces.length > 0 ) this.props.socket.emit('app_user saw messages', unseenAnnonces);
 
     }
+
+    setPage = (newPage) => {
+        console.log('setPage to', newPage);
+        let {
+            maxItem,
+            itemPerPage,
+        } = this.state;
+        let maxPage = Math.ceil(maxItem/itemPerPage);
+        if( newPage <= 0 || newPage > maxPage) return;
+        //resend the request
+        this.props.socket.emit('get annonce' , this.props.session.num_user , itemPerPage ,newPage);
+        this.setState({
+            currentPage : newPage,
+        });
+    }
     render(){
-        let { annonces } = this.state;
+        let { 
+            annonces,
+            maxItem,
+            itemPerPage,
+            currentPage,
+        } = this.state;
         let annoncesElements;
         if( annonces.length > 0){
             annoncesElements = annonces.map( annonce =>
@@ -78,6 +108,9 @@ export default class AnnonceList extends Component{
                 <div className = "scroll_list" ref={this.myScroll}>
                     {annoncesElements}
                 </div>
+                <Paginer  setPage={this.setPage} 
+                            maxPage={Math.ceil(maxItem/itemPerPage)}
+                            currentPage={currentPage}/>
             </div>
         );
     }

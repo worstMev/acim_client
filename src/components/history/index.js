@@ -24,12 +24,12 @@ export default class History extends React.Component {
                 statut_libelle : item.statut_libelle,
                 lieu : item.lieu,
                 remarque : item.remarque || '-',
-                date_envoie : new Date(item.date_envoie).toLocaleString('fr-FR'),
+                date_envoie : item.date_envoie,
                 num_app_user_tech_main : item.num_app_user_tech_main,
                 tech_main_username : item.tech_main_username || '-',
-                date_reponse : (item.date_reponse)? new Date(item.date_reponse).toLocaleString('fr-FR'): '-',
-                num_intervention : item.num_intervention || 'nd',
-                date_programme : (item.date_programme)? new Date(item.date_programme).toLocaleString('fr-FR'): '-',
+                date_reponse : item.date_reponse,
+                num_intervention : item.num_intervention,
+                date_programme : item.date_programme,
             }));
             this.setState({
                 notifsTab : newNotifsTab,

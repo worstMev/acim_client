@@ -37,7 +37,7 @@ export default function InterventionLog (props) {
     
     return (
         <div className="interventionLog">
-            <FoldableDiv title="Log" folded={true}>
+            <FoldableDiv title="Etape(s)" folded={true}>
                 <form onSubmit={ (e)=>changeEtapesLength(e,etapes.length + 1) } >
                     {logElements}
                     <button onClick={(e)=>changeEtapesLength(e,etapes.length + 1)}> + </button>
