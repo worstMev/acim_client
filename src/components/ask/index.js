@@ -101,7 +101,7 @@ export default class Ask extends React.Component {
                 console.log('new notif in history');
                 this.props.nbNewNotifsPlus();
                 this.setState({
-                    indication : `Demande envoyee #${createdNotif.date_envoie}`,
+                    indication : `Demande envoyée #${createdNotif.date_envoie}`,
                 });
             });
 

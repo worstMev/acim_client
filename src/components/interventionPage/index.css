@@ -102,4 +102,11 @@
     color : white;
 }
 
-
+.interventionPage .participant{
+    display : flex;
+    flex-direction : row;
+    width: 75%;
+    border: 1px solid black;
+    margin: 5px;
+    border-radius: 5px;
+}

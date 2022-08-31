@@ -1,15 +1,29 @@
 .materielReparationItem{
     display : flex;
-    flex-direction : row;
+    flex-direction : column;
     border : 1px solid black;
     margin : 5px;
     padding : 5px;
     width : 85%;
 }
 
-.materielReparationItem p{
-    width : 22%;
+.materielReparationItem .control{
+    display : flex;
+    flex-direction : row;
+    justify-content : flex-end;
 }
-.materielReparationItem button{
-    width : 12%;
+
+.materielReparationItem-info{
+    display : flex;
+    flex-direction : row;
+}
+
+.materielReparationItem-info p{
+    width : 22%;
+    border-right : 1px solid grey;
+    padding : 2px;
+}
+
+.materielReparationItem-info p:last-child{
+    border : none;
 }

@@ -22,15 +22,11 @@ class App extends React.Component {
             t_t: null,
             t_a : null,
         }
-        this.computedHash_USER = null;
-        this.computedHash_TECH_MAIN = null;
         console.log('constructor', this.state);
     }
 
 
     setCredentials = (cred) => {
-        this.computedHash_TECH_MAIN = null;
-        this.computedHash_USER = null;
         this.setState({
             logged : cred.logged,
             num_user : cred.num_user,
@@ -84,6 +80,7 @@ class App extends React.Component {
                 //no need to compute just nullify
                 computedHash_USER = null;
                 computedHash_TECH_MAIN = null;
+                computedHash_ADMIN = null;
 
             }else{
                 computedHash_USER       = await computeHmac(User.USER.code,nextState.username);

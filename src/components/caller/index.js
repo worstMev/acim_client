@@ -5,7 +5,7 @@ import Peer from 'peerjs';
 
 /*
  * props:
- * -userToCall : { num_user , username }
+ * -userToCall : { num_user , username , num_notification}
  * - deleteFromListToCall
  * - socket 
  * - session
@@ -16,6 +16,7 @@ export default class Caller extends Component {
         super(props);
         this.state = {
             peerIds : [],
+            num_notifications : [],// multiple as only one caller for a num_user
             isCalling : false,
             isConnected : false,
             micIsOk : false,
@@ -24,7 +25,27 @@ export default class Caller extends Component {
         this.myPeer = null ;
         this.myCalls = {};
         this.myAudioStream = null;
+        this.startTime = null;
     }
+
+    //log the call to database
+    logCall = () => {
+        let stopTime = new Date();
+
+        let num_tech_main = this.props.session.num_user ;
+
+        let { 
+            num_notification,
+            num_user ,
+        } = this.props.userToCall;
+
+        //compute duration 
+        let duration = stopTime - this.startTime;
+
+        this.props.socket.emit('log call' , num_notification , duration, num_user, num_tech_main);
+
+    }
+
     startCall = () => {
         let { session  , userToCall } = this.props;
         let { peerIds } = this.state;
@@ -62,11 +83,13 @@ export default class Caller extends Component {
                     delete this.myCalls[calledConn.metadata.peerId];
                     if( Object.keys(this.myCalls).length < 1){
                         this.myAudioStream.getTracks().forEach(track => track.stop());
+                        this.logCall();
                         this.setState({
                             isCalling : false,
                             indic : 'deconnecté !',
                         });
                     }
+                    
                 });
                 this.myCalls[calledConn.metadata.peerId].monitorConn.on('data',(msg) => {
                     this.setState({
@@ -98,6 +121,7 @@ export default class Caller extends Component {
                         });
                         this.myCalls[peerId].call.on('stream' , (streamBack) => {
                             let audio = new Audio();
+                            this.startTime = new Date();
                             audio.srcObject = streamBack;
                             audio.play();
                             console.log('accept this stream', streamBack);
@@ -136,6 +160,7 @@ export default class Caller extends Component {
         //stop everything
         console.log('stop stream' ,this.myAudioStream , this.myCalls);
         
+        
         this.myAudioStream.getTracks().forEach(track => track.stop());
         for ( const peerId of this.state.peerIds ) {
             console.log('stop stream for peer ', peerId);
@@ -143,6 +168,7 @@ export default class Caller extends Component {
             //if( this.myCalls[peerId].call ) this.myCalls[peerId].call.close(); NOT NEEDED monitorConn.close closes calls
         }
         this.myPeer.disconnect();
+        this.logCall();
         this.setState({
             isCalling : false,
             indic : '',
@@ -210,13 +236,17 @@ export default class Caller extends Component {
         let {
             username ,
             num_user ,
+            num_notification ,
         } = userToCall;
         isConnected = (isConnected && peerIds.length);
         let button = (<button className="myButton green" onClick = {this.startCall}> Appeler </button>);
         if (isCalling) button = (<button className="myButton" onClick = {this.stopCall}> Raccrocher </button>);
         return (
             <div className= "caller">
-                <p> Appeler : {username} {(isConnected)? 'est connecté' : 'est hors-connexion'} </p>
+                <div>
+                    <p> Appeler : {username} {(isConnected)? 'est connecté' : 'est hors-connexion'} </p>
+                    <p> ID notification : {num_notification} </p>
+                </div>
                 <p> micro : {(micIsOk) ? 'OK' : 'probleme !!'} </p>
                 <p> {indic} </p>
                 <div className="control">

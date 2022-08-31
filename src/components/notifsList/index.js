@@ -124,16 +124,19 @@ export default class NotifsList extends React.Component {
                 addToListToCall = {this.props.addToListToCall}/> );
 
         });
+        let titleNonReps = `non répondue`;
+        if( unansweredNotifsList.length > 1) titleNonReps += 's';
+        titleNonReps += ` : ${unansweredNotifsList.length}`;
         return (
             <div id="notifsList" onClick={this.onClickOnNotifsList}>
-                <p> Notifications recues {this.props.session.username} </p>
+                <p> Notifications reçues {this.props.session.username} </p>
                 <div className="scroll_list">
-                    <FoldableDiv title={`non repondue : ${unansweredNotifsList.length}`}>
+                    <FoldableDiv title={titleNonReps}>
                         <div id="scroll_list-notifsList">
                             {this.displayNotif(this.state.unansweredNotifsList)}
                         </div>
                     </FoldableDiv>
-                    <FoldableDiv title={`Notifications recues aujourd'hui : ${notifsToday.length}`}folded={true}>
+                    <FoldableDiv title={`Notifications reçues aujourd'hui : ${notifsToday.length}`}folded={true}>
                         <div id="scroll_list-notifsList">
                             {todayNotifsElement}
                         </div>

@@ -45,6 +45,7 @@ export default class TechActivity extends Component{
                 </div>
                 <div className="main">
                     <TechActivityDisplay
+                        session = {this.props.session}
                         tech={selectedUser}
                         socket = { this.props.socket }
                         resetUser = { () => this.updateSelectedUser({}) }

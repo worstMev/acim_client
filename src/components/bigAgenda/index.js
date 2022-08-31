@@ -27,7 +27,7 @@ export default function BigAgenda(props){
         <div className="bigAgenda">
             <div className="control">
                 <p>Agenda</p>
-                <label> Details
+                <label> Détails
                     <input type="checkbox" 
                         value={showTimeline} 
                         onChange ={(e)=>setShowTimeline(e.target.checked)} />

@@ -116,9 +116,10 @@ export default class MaterielSelector extends Component {
 
     }
     componentDidMount(){
-        this.props.socket.emit('get materiel list');
-        this.props.socket.on('materiel list -materielSelector' ,(materiels,materielTypes,lieus) => {
+        this.props.socket.emit('get materiel list in place');
+        this.props.socket.on('materiel list in place -materielSelector' ,(materiels,materielTypes,lieus) => {
             console.log('materiels', materiels,materielTypes,lieus);
+
             let materielsListLieu = {};
             materielsListLieu.nd = {
                 nd : [{ key : 'nd' , libelle:'nd' , value : 'nd'  }],
@@ -169,7 +170,7 @@ export default class MaterielSelector extends Component {
 
     componentWillUnmount(){
        console.log('materielSelector unmount');
-       this.props.socket.off('materiel list -materielSelector'); 
+       this.props.socket.off('materiel list in place -materielSelector'); 
     }
     render() {
         let {

@@ -4,7 +4,13 @@ import FoldableDiv from './../foldableDiv';
 import ProblemeTechConstate from './../problemeTechConstate';
 import InterventionLog from './../interventionLog';
 import InterventionDecharge from './../interventionDecharge';
+import ReparationLocale from './../reparationLocale';
 import MultiMaterielSelector from './../multiMaterielSelector';
+
+/*
+ * props :
+ * - socket 
+ */
 
 export default class InterventionPage extends React.Component  {
     constructor(props){
@@ -19,7 +25,9 @@ export default class InterventionPage extends React.Component  {
             remarque : '',
             log : 'etape1 ; etape2; etape3;',
             num_decharge : '',
+            decharge : {},
             materiels : [{num:'nd' , type:'nd', lieu:'nd'}],//only one but to adapt to multiMaterielSelector way of things we use an array
+            participants : [],
         }
     }
     updateMateriel = (newMateriels) => {
@@ -157,15 +165,32 @@ export default class InterventionPage extends React.Component  {
 
     componentDidMount () {
         console.log('intervention page mounted');
-        console.log(this.props.socket);
+
+        const { 
+            num_intervention
+        } = this.props;
+
+        //console.log(this.props.socket);
         this.props.socket.emit('get intervention data' , this.props.num_intervention);
+        this.props.socket.emit('get all participants', this.props.num_intervention);
+
         this.props.socket.on('intervention data',(intervention) => {
             console.log('intervention data', intervention);
 
+            if(intervention.num_decharge){
+                this.props.socket.emit('get decharge info full',intervention.num_decharge);
+            }
             this.setState({
                 intervention : intervention ,
                 log : intervention.log,
                 num_decharge : intervention.num_decharge,
+            });
+        });
+
+        this.props.socket.on('get decharge info full -interventionPage', (dech) => {
+            console.log('get decharge info full -interventionPage', dech);
+            this.setState({
+                decharge : dech,
             });
         });
 
@@ -208,12 +233,49 @@ export default class InterventionPage extends React.Component  {
             });
         });
 
+        this.props.socket.on('updated decharge', () => {
+            this.props.socket.emit('get intervention data' , this.props.num_intervention);
+        });
+
+        this.props.socket.on(`all participants -intervention -${num_intervention}`, (participants) => {
+            console.log(`all participants -intervention -${num_intervention}`, participants);
+            this.setState({
+                participants : participants,
+            });
+        });
+
+
     }
     
+    toggleConfirmPartaking = (num_interv, num_user, old_value) => {
+        console.log('toggle partaking',num_interv, num_user, old_value);
+        let new_value = !old_value;
+        this.props.socket.emit('update partaking',['is_confirmed'], [new_value], num_interv, num_user);
+    }
+
     componentDidUpdate(){
         console.log('intervention page updated' , this.props.num_intervention);
         if( this.props.num_intervention !== this.state.num_intervention ) {
             this.props.socket.emit('get intervention data' , this.props.num_intervention);
+            this.props.socket.emit('get all participants', this.props.num_intervention);
+
+            this.props.socket.off(`all participants -intervention -${this.state.num_intervention}`);//num_intervention in state is the old one ; MUST clean
+            this.props.socket.off(`new partaking request -${this.state.num_intervention}`);
+            this.props.socket.off(`update participants -${this.state.num_intervention}`);
+
+            this.props.socket.on(`all participants -intervention -${this.props.num_intervention}`, (participants) => {
+                console.log(`all participants -intervention -${this.props.num_intervention}`, participants);
+                this.setState({
+                    participants : participants,
+                });
+            });
+            this.props.socket.on(`new partaking request -${this.props.num_intervention}`,() => {
+                this.props.socket.emit('get all participants', this.props.num_intervention);
+            });
+            this.props.socket.on(`update participants -${this.props.num_intervention}`, () => {
+                this.props.socket.emit('get all participants', this.props.num_intervention);
+            });
+
             let newIntervention ;
             if( !this.props.num_intervention ) newIntervention = {};
             else newIntervention = this.state.intervention ;
@@ -225,13 +287,18 @@ export default class InterventionPage extends React.Component  {
                 
             });
         }
-        
     }
     componentWillUnmount(){
         console.log('interventionPage unmount');
+        const { 
+            num_intervention
+        } = this.props;
         this.props.socket.off('intervention data');
         this.props.socket.off('tech_main is authenticated');
         this.props.socket.off('started intervention');
+        this.props.socket.off('get decharge info full -interventionPage');
+        this.props.socket.off('updated decharge');
+        this.props.socket.off(`all participants -intervention -${num_intervention}`);
         //this.props.socket.off('probleme_tech_type list');
         //this.props.socket.off('lieu list');
         this.props.socket.off('new decharge');
@@ -274,6 +341,7 @@ export default class InterventionPage extends React.Component  {
             log,
             num_decharge,
             materiels,
+            participants,
         }   = this.state;
         
         let {
@@ -285,6 +353,7 @@ export default class InterventionPage extends React.Component  {
         if( date_fin ) date_fin = new Date(date_fin).toLocaleString('fr-FR');
         let { num_intervention } = this.props;
         let display ;
+        let dechargeDisplay;
         let control = (
             <>
                 { !date_debut &&
@@ -325,8 +394,8 @@ export default class InterventionPage extends React.Component  {
                     <p> Lieu : {libelle_lieu} </p>
                     <p> Faite par : {tech_main_username} </p>
                     <p> Programme le : {date_programme} </p>
-                    <p> Debutee le : {date_debut} </p>
-                    <p> Terminee le : {date_fin} </p>
+                    <p> Debutée le : {date_debut} </p>
+                    <p> Terminée le : {date_fin} </p>
                     { libelle_probleme_tech_type &&
                         <p> Probleme constaté : { libelle_probleme_tech_type } -- {lieu_probleme_tech} </p>
                     }
@@ -355,11 +424,46 @@ export default class InterventionPage extends React.Component  {
                     }
                 </>
             );
+            if(num_decharge_info){
+                dechargeDisplay = (
+                    <ReparationLocale
+                        decharge = {this.state.decharge}
+                        socket = {this.props.socket}
+                        session = {this.props.session} />
+                );
+            }else{
+
+                dechargeDisplay = (
+                    <InterventionDecharge
+                        socket = {this.props.socket}
+                        session = {this.props.session}
+                        num_intervention = {num_intervention}
+                        num_decharge = {num_decharge}
+                        downloadDecharge = {this.getDecharge}
+                        downloadDechargeDoc = {this.getDechargeDoc} />
+                );
+            }
+
+            let participantsDisplay;
+            if( participants.length > 0){
+                participantsDisplay = participants.map( part =>{ 
+                    let control = <button onClick={()=> this.toggleConfirmPartaking(part.num_intervention, part.num_user, part.is_confirmed)}> {part.is_confirmed ? 'annuler':'confirmer'} </button>;
+                    return (
+                        <div className="participant" key={part.num_user}>
+                            <p> - {part.username} </p>
+                            {control}
+                        </div>
+                    );
+                });
+            }
             display = (
                 <>
                     <div className="intervention-form">
                         <FoldableDiv title="INFO">
                             {info}
+                        </FoldableDiv>
+                        <FoldableDiv title="Participants" folded={true}>
+                            {participantsDisplay}
                         </FoldableDiv>
                         <div className="intervention-modifier">
                             <FoldableDiv title="Modifier" folded={true}>
@@ -376,21 +480,16 @@ export default class InterventionPage extends React.Component  {
                                     log = {log}
                                     updateLog = {this.updateLog}
                                     />
-                                    <MultiMaterielSelector
-                                        socket = {this.props.socket}
-                                        listMateriel = {materiels}
-                                        setListMateriel = {this.updateMateriel}
-                                        maxListMaterielLength = {1}
-                                        title="Objet de l'intervention"
-                                        folded={true}
-                                        />
-                                <InterventionDecharge
+                                <MultiMaterielSelector
                                     socket = {this.props.socket}
-                                    num_intervention = {num_intervention}
-                                    num_decharge = {num_decharge}
-                                    downloadDecharge = {this.getDecharge}
-                                    downloadDechargeDoc = {this.getDechargeDoc}
+                                    listMateriel = {materiels}
+                                    setListMateriel = {this.updateMateriel}
+                                    maxListMaterielLength = {1}
+                                    title="Objet de l'intervention"
+                                    folded={true}
                                     />
+                                {dechargeDisplay}
+
                                 <button onClick={this.updateIntervention}> Sauvergarder </button>
                             </FoldableDiv>
                         </div>

@@ -147,7 +147,7 @@ export default class Notify extends React.Component {
                 date_envoie,
                 date_reponse,
                 date_programme : new Date(date_programme).toLocaleString('fr-FR'),
-                text : `${tech_main_username} arrive pour le probleme : " ${probleme_type} " lieu : ${lieu} - notifie le ${date_envoie_formatted} `,
+                text : `${tech_main_username} arrive pour le probleme : " ${probleme_type} " lieu : ${lieu} - notifié le ${date_envoie_formatted} `,
                 key : num_notification,
             }
             let newNotifsList = this.state.notifsList.slice();

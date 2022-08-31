@@ -214,7 +214,7 @@ export default class Called extends Component {
         await this.detectMic();
         this.props.socket.emit('get list tech_main connected');//returns num_user of any user not just tech_main
         if (call) this.ringtone.play();
-        //createa  monitoring connection
+        //create a  monitoring connection
         this.monitorConn = peer.connect( caller.call.peer , { label : 'audio', metadata : {peerId : peer.id} });
         this.monitorConn.on('close',()=>{
             //rejecting from tech

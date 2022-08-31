@@ -2,7 +2,6 @@ import './index.css';
 import React from 'react';
 import { NavLink , Switch , Route ,Redirect} from 'react-router-dom';
 import ToDoList from './../toDoList';
-import NotifsList from './../notifsList';
 import CreateIntervention from './../createIntervention';
 import TechActivity from './../techActivity';
 
@@ -83,9 +82,9 @@ export default class Dashboard extends React.Component{
             <div className="dashboard">
                 <div className="main-dashboard" style={mainDashboardStyle}>
                     <nav id="nav_dashboard">
-                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/toDo`}> Interventions a faire {(this.state.nbInterventionUndone > 0) ? `(${this.state.nbInterventionUndone})`:''} </NavLink>
-                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/tech_activity`}> Activitées </NavLink>
-                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/creer`}> Creer </NavLink>
+                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/toDo`}> Interventions à faire {(this.state.nbInterventionUndone > 0) ? `(${this.state.nbInterventionUndone})`:''} </NavLink>
+                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/tech_activity`}> Activités </NavLink>
+                        <NavLink activeClassName="active_navLink_dashboard" to={`${url}/creer`}> Créer </NavLink>
                     </nav>
                     <div id="display_dashboard">
                         <Switch>
@@ -107,9 +106,6 @@ export default class Dashboard extends React.Component{
                                                         />
                             }/>
 
-                            <Route path={`${path}/notifs`} render = {
-                                (routeProps) => <NotifsList  {...routeProps} {...this.props} setNbNewNotif = {this.nbNewNotificationPlus} />
-                            }/>
 
                             <Route path={`${path}/creer`} render = {
                                 (routeProps) => <CreateIntervention {...routeProps} {...this.props} />

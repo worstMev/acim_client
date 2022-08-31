@@ -404,7 +404,7 @@ export default class CreateIntervention extends Component {
                             </label>
                             <textarea value={motif} onChange={this.updateMotif}></textarea>
                         </div>
-                        <FoldableDiv title="Probleme" folded={true}>
+                        <FoldableDiv title="Problème" folded={true}>
                             <div className="sub-category-option">
                                 <label> Type du probleme:
                                 </label>

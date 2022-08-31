@@ -5,7 +5,6 @@ import {  Switch , Route , Redirect, NavLink   } from 'react-router-dom';
 import { mySocket } from './../../socket_io/socket_io';
 import Dashboard from './../dashboard';
 import NotifsHistory from './../notifsHistory';
-import ToDoList from './../toDoList';
 import InterventionPage from './../interventionPage';
 import InterventionHistory from './../interventionHistory';
 import MessagePage from './../messagePage';
@@ -60,12 +59,16 @@ export default class Main extends React.Component{
                 //},
                 
             ],
-            listToCall : [],//list of those we want to call; {username, num_user}
+            listToCall : [],//list of those we want to call; {username, num_user , num_notifs : []}
             showCall : false,
+            newRequests : [
+                //[{num_intervention , date_received , seen}]
+            ],
         };
         this.socket = mySocket.socket;
         this.popUp = React.createRef();
         this.popUpMessage = React.createRef();
+        this.popUpRequest = React.createRef();
         this.notifSound = new Audio(notif1);
         this.messageSound = new Audio(notifMessage);
     }
@@ -73,15 +76,29 @@ export default class Main extends React.Component{
     addToListToCall = (newItem) => {
         let newListToCall = this.state.listToCall.slice();
         //only one per num_user
-        if( !newListToCall.find( item => item.num_user === newItem.num_user )){
-            newListToCall.push(newItem);//{num_user , username}
+        let foundUser = newListToCall.find( item => item.num_user === newItem.num_user );
+        if( !foundUser){
+            newListToCall.push(newItem);//{num_user , username ,num_notification}
             console.log('addToListToCall , newListToCall ', newListToCall);
             this.setState({
                 listToCall : newListToCall,
                 showCall : true,
             });
         }else{
+            //if num_notification is not the same
+            if( foundUser.num_notification !== newItem.num_notification ){
+                console.log('change num_notification');
+                let indexToChange = newListToCall.findIndex( item => item.num_user === foundUser.num_user );
+                //change it directly
+                newListToCall[indexToChange].num_notification = newItem.num_notification;
+                
+                console.log('change num_notification, newListToCall :', newListToCall);
+            }
+            //change the num_notification
+
+
             this.setState({
+                listToCall : newListToCall,
                 showCall : true,
             });
         }
@@ -290,6 +307,23 @@ export default class Main extends React.Component{
             console.log('updateAnnonce -main');
             this.socket.emit('get nb new annonce', this.props.session.num_user);
         });
+
+        this.socket.on('new partaking request -main', (num_intervention) => {
+            console.log('new partaking request -main',num_intervention);
+            let date_received = new Date().getTime();
+            let seen = false;
+            let newNewRequests = this.state.newRequests.filter( item => {
+                const now_10 = new Date().getTime() - (10*60*1000);
+                return ( item.date_received > now_10 || !item.seen);
+            }).slice();
+            newNewRequests.unshift({ num_intervention , date_received , seen});
+            this.setState({
+                //[{num_intervention , date_received , seen}]
+                newRequests : newNewRequests,
+            });
+            this.notifSound.play();
+            this.showPopUp(this.popUpRequest);
+        });
         
     }
 
@@ -306,6 +340,7 @@ export default class Main extends React.Component{
         this.socket.off('updateAnnonce -main');
         this.socket.off('new intervention -main');
         this.socket.off('ended intervention -main');
+        this.socket.off('new partaking request -main');
         this.socket.offAny();
         this.socket.removeAllListeners();
         mySocket.socket.disconnect();
@@ -359,6 +394,17 @@ export default class Main extends React.Component{
         let { url } = this.props.match;
         this.popUpMessage.current.style.top = "-1000px";
         this.props.history.push(`${url}/annonce`);
+    }
+
+    onClickRequest = (num_interv,index) => {
+        this.showSub(num_interv);
+        this.popUpRequest.current.style.top = "-1000px";
+        let newReqs = this.state.newRequests.filter ( (req,id) => {
+            return ( req.num_intervention !== num_interv && id !== index)
+        }).slice();
+        this.setState({
+            newRequests : newReqs,
+        });
     }
 
     goToCreateIntervention = (state) => {
@@ -423,6 +469,7 @@ export default class Main extends React.Component{
             showNav,
             showCall,
             listToCall,
+            newRequests,
         } = this.state;
         let displayStyle ;
         let subStyle ;
@@ -464,15 +511,21 @@ export default class Main extends React.Component{
             callListStyle = {
                 top : '20px',
             };
-            callElements = listToCall.map(({username , num_user}) => 
-                <Caller key={num_user} 
+            callElements = listToCall.map( toCall  => 
+                <Caller key={toCall.num_user} 
                     socket = {this.socket}
                     session = {this.props.session}
                     deleteFromListToCall = {this.deleteFromListToCall}
-                    userToCall = {{username , num_user}}/>
+                    userToCall = {toCall}/>
             );
 
         }
+
+        let requestsDisplay = newRequests.map( (req,index) => 
+            <div className = "notif_pop_notif" onClick={()=> this.onClickRequest(req.num_intervention,index)} key={req.num_intervention}>
+                <p> Nouvelle demande de participation à une intervention. </p>
+            </div>
+        );
                         //<div className="logo-main">
                         //    <img src={logo} alt="mndpt|acim"/>
                         //    
@@ -488,6 +541,9 @@ export default class Main extends React.Component{
                     </div>
                     <div className="notif_pop" ref={this.popUpMessage}>
                         {this.showNewMessageNotifs()}
+                    </div>
+                    <div className="notif_pop" ref={this.popUpRequest}>
+                        {requestsDisplay}
                     </div>
                     <div className="call_list" style={callListStyle}>
                         <div className="header">
@@ -513,7 +569,7 @@ export default class Main extends React.Component{
                             <NavLink activeClassName="active_navLink"  to={`${url}/message`} onClick={this.closeSub}>Messages {(nbNewMessage>0) ? `(${nbNewMessage})` : ''}</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/annonce`} onClick={this.closeSub}>Annonces {(nbNewAnnonce>0) ? `(${nbNewAnnonce})` : ''}</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/agenda`} onClick={this.closeSub}>Agenda</NavLink>
-                            <NavLink activeClassName="active_navLink"  to={`${url}/creer`} onClick={this.closeSub}>Creer une intervention</NavLink>
+                            <NavLink activeClassName="active_navLink"  to={`${url}/creer`} onClick={this.closeSub}>Créer une intervention</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/notifsHistory`} onClick={this.closeSub}>Historiques des notifications</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/interventionHistory`} onClick={this.closeSub}>Historiques des interventions</NavLink>
                             <NavLink activeClassName="active_navLink"  to={`${url}/rapport`} onClick={this.closeSub}>{`Rapport d'activité`}</NavLink>
@@ -536,16 +592,6 @@ export default class Main extends React.Component{
                                                                 />
                                         }/>
 
-                                        <Route path={`${path}/mytask`} 
-                                                render = {
-                                                    (routeProps) => <ToDoList {...routeProps} 
-                                                                        {...this.props} 
-                                                                        showSub={this.showSub} 
-                                                                        socket={this.socket} 
-                                                                        num_tech_main={session.num_user} 
-                                                                        topText={`Listes des taches a faire par ${session.username} :`}
-                                                                        closeSub ={()=> this.showSub(numSelectedIntervention)} 
-                                                                        />
 
                                         }/>
                                         <Route path={`${path}/mytasknew`} 

@@ -10,12 +10,15 @@ export default class Layout extends React.Component {
                 {this.props.children}
             </main>
             <footer>
-              <Link to="/">home</Link>
-              <Link to="/info">info</Link>
-              <Link to="/acim">acim</Link>
-              <Link to="/notify">notify</Link>
+                <Link to="/info">info</Link>
             </footer>
         </div>
      );
     }
 }
+
+
+              //<Link to="/">home</Link>
+              //<Link to="/info">info</Link>
+              //<Link to="/acim">acim</Link>
+              //<Link to="/notify">notify</Link>

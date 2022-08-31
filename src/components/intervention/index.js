@@ -13,12 +13,15 @@ import red_dot from './../../res/icon/red_dot.png';
  * - intervention
  * - isChild : for children of intervention
  * - showSub : to show the interventionPage of the intervention
+ * - session
+ * - socket
  */
 export default class Intervention extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             detailsAreShown : false ,
+            participants : [],
         }
     }
     showDetails = () => {
@@ -31,9 +34,61 @@ export default class Intervention extends React.Component {
         //this.props.history.push(`/intervention/${num_intervention}`);
         this.props.showSub(num_intervention);
     }
+
+    askToPartake = () => {
+        let {
+            num_intervention,
+        } = this.props.intervention
+        let {
+            num_user,
+        } = this.props.session;
+        console.log('ask to partake num_intervention %s , num_user %s', num_intervention , num_user);
+        if( num_intervention , num_user ) {
+            if(this.props.socket){
+                this.props.socket.emit('ask to partake', num_intervention , num_user);
+            }
+        }
+
+    }
+
+    componentDidMount() {
+        console.log('intervention mounted');
+        if( this.props.intervention.num_intervention ){
+            const { 
+                num_intervention
+            } = this.props.intervention;
+            if(this.props.socket){
+                this.props.socket.emit(`get all participants`, num_intervention);
+
+                this.props.socket.on(`all participants -intervention -${num_intervention}`,(participants) => {
+                    console.log('all participants -intervention', participants);
+                    this.setState({
+                        participants : participants,
+                    });
+                });
+
+                this.props.socket.on(`update participants -${num_intervention}`, () => {
+                    this.props.socket.emit(`get all participants`, num_intervention);
+                });
+
+            }
+        }
+    }
+
+    componentWillUnmount() {
+        console.log('intervention will unmount');
+        const { 
+            num_intervention
+        } = this.props.intervention;
+        if(this.props.socket){
+            this.props.socket.off(`all participants -intervention -${num_intervention}`);
+            this.props.socket.off(`update participants -${num_intervention}`);
+        }
+    }
     render () {
         let {
             isChild,
+            session,
         } = this.props;
         let { date_programme ,
             num_intervention, 
@@ -43,6 +98,7 @@ export default class Intervention extends React.Component {
             commentaire,
             libelle_intervention_type,
             tech_main_username,
+            num_tech_main_creator,
             numero,
             done,
             probleme_resolu,
@@ -172,6 +228,27 @@ export default class Intervention extends React.Component {
             );
         }
 
+        let isMine = true ;//to stop showing button when no session and socket in props
+        if( this.props.session){
+            isMine = (num_tech_main_creator === this.props.session.num_user);
+        }
+
+        let isPartaking = false;
+        let pendingPartaking = false;
+        let participantsDisplay ;
+        if( this.state.participants ){
+            if(this.props.session){
+                const foundPartaker = this.state.participants.find( item => item.num_user === this.props.session.num_user);
+                if( foundPartaker ) {
+                    pendingPartaking = !foundPartaker.isConfirmed;
+                    isPartaking = foundPartaker.isConfirmed;
+                }
+            }
+            participantsDisplay = this.state.participants.map(part => <p key={part.num_user}> - {part.username} {part.is_confirmed ? '':'(en attente de confirmation)'} </p>);
+            
+        }
+
+
         let detailsElement = (
                 <div className="toDo-details" style={detailStyle} >
                     <p> Type : {libelle_intervention_type} - {commentaire} </p>
@@ -187,6 +264,18 @@ export default class Intervention extends React.Component {
                                 {childElements}
                             </div>
                         </FoldableDiv>
+                    }
+                    { this.state.participants.length > 0 &&
+                            <>
+                                <p> Participants : </p>
+                                {participantsDisplay}
+                            </>
+                    }
+                    { !isMine && !isPartaking && !pendingPartaking &&
+                            <button onClick = {this.askToPartake}> Participer </button>
+                    }
+                    { !isMine && pendingPartaking &&
+                            <p> En attente de confirmation de {tech_main_username} </p>
                     }
                     
                     <button onClick={() => this.goToIntervention(num_intervention)} className="myButton"  >
@@ -212,11 +301,11 @@ export default class Intervention extends React.Component {
                         <div className="dots">
                             <div className="done" style={doneStyle}>
                                 {doneElement}
-                                <p> Effectué </p>
+                                <p> Effectuée </p>
                             </div>
                             <div className="probleme_resolu" style={okStyle}>
                                 {pbElement}
-                                <p> Probleme résolue </p>
+                                <p> Problème résolue </p>
                             </div>
                         </div>
                         <div className="tache_description">

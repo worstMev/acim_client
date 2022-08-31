@@ -1,8 +1,9 @@
 import './index.css';
-import React,{useState } from 'react';
+import React,{useState , useEffect} from 'react';
 import FoldableDiv from './../foldableDiv';
 import MultiMaterielSelector from './../multiMaterielSelector';
 import { generateDocx } from './../../generateDocx/generate.js';
+import ReparationLocale from './../reparationLocale';
 
 /*
  * props :
@@ -11,6 +12,7 @@ import { generateDocx } from './../../generateDocx/generate.js';
  * -downloadDecharge : method to download --not used
  * -downloadDechargeDoc : method to download --not used
  */
+
 export default function InterventionDecharge(props){
     //materiels are num_materiels
     let tomorrowDate = new Date(new Date().setDate(new Date().getDate()+1)); 
@@ -23,6 +25,20 @@ export default function InterventionDecharge(props){
     let style ;
     let control ;
     let disabled ;
+
+    //get data
+    //useEffect( () => {
+    //    props.socket.emit('get decharge info full', num_decharge);
+    //    props.socket.on('decharge info full -interventionDecharge', (dech) => {
+    //        console.log('decharge info full', dech);
+    //    });
+
+    //    return () => {
+    //        console.log('off socket')
+    //        props.socket.off('decharge info full -interventionDecharge');
+    //    };
+
+    //});
 
     let title = 'Effectuer une décharge';
     if(num_decharge){
@@ -102,6 +118,7 @@ export default function InterventionDecharge(props){
 }
 
 function formatDate (date) {
+    // new Date to yyyy-mm-dd
     let day = `${date.getDate()}`;
     let month = `${date.getMonth() +1}`;
     let year = date.getFullYear();

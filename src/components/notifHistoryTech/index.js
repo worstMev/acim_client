@@ -93,7 +93,7 @@ export default class NotifHistoryTech extends React.Component {
                         <p> par : {this.props.notif.user_sender_username} </p>
                     </div>
                     <div className="date_envoie">
-                        <p> Date d'envoie : </p>
+                        <p> Date d'envoi : </p>
                         <p> <DateHourMinute date={this.props.notif.date_envoie}/> </p>
                     </div>
                     <button className="myButton" onClick={this.showDetails}> Details </button>

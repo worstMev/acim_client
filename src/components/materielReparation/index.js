@@ -2,7 +2,13 @@ import './index.css';
 import React, { Component } from 'react';
 import FoldableDiv from './../foldableDiv';
 import Paginer from './../paginer';
-import MaterielReparationItem from './../materielReparationItem';
+import ReparationLocale from './../reparationLocale';
+
+/*
+ * props :
+ * - socket
+ * - session
+ */
 
 export default class MaterielReparation extends Component{
     constructor(props){
@@ -38,7 +44,7 @@ export default class MaterielReparation extends Component{
         this.props.socket.on('all decharge', (decharges,number) => {
             console.log('all decharge', decharges);
             // [{ num_decharge , date_debut , date_fin , num_intervention , tech_main_username , materiels[] }]
-            // materiel >> { num_materiel , libelle_materiel , libelle_materiel_type , config_origine }
+            // materiels >> { num_materiel , libelle_materiel , libelle_materiel_type , config_origine , lieu}
             if(decharges.length){
                 this.setState({
                     decharges : decharges,
@@ -46,11 +52,25 @@ export default class MaterielReparation extends Component{
                 });
             }
         });
+
+        this.props.socket.on('updated materiel', (updatedMatos) => {
+            //when a materiel is updated , re-get all data
+            //
+            console.log('updated materiel currentPage ', this.state.currentPage);
+            //currentState is called at the beginning , then is always 1
+            this.props.socket.emit('get all decharge',this.itemPerPage,this.state.currentPage);
+        });
+
+        this.props.socket.on('updated decharge', (updatedDecharge) => {
+            //when a decharge is updated get all data
+            this.props.socket.emit('get all decharge',this.itemPerPage,this.state.currentPage);
+        });
     }
 
     componentWillUnmount = () => {
         console.log('materielReparation unmount');
         this.props.socket.off('all decharge');
+        this.props.socket.off('updated materiel');
     }
 
     render(){
@@ -60,13 +80,8 @@ export default class MaterielReparation extends Component{
             maxPage,
         } = this.state;
         const dechargesDisplay = decharges.map(dech => {
-            const title = ` Décharge par ${dech.tech_main_username} du ${dech.date_debut} au ${dech.date_fin} venant de {lieu}`;
-            const matos = dech.materiels.map( mat => <MaterielReparationItem key = {mat.num_materiel}  materiel = {mat} /> ); 
             return (
-                <FoldableDiv title={title} folded={true} key = {dech.num_decharge} >
-                    <p> id : {dech.num_decharge} </p>
-                    {matos}
-                </FoldableDiv>
+                <ReparationLocale key={ dech.num_decharge} decharge={dech} session={this.props.session} socket={this.props.socket} />
             );
         });
         return(

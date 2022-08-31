@@ -157,7 +157,7 @@ export default class MyTask extends Component{
         let allTitle = `Toutes : ${interventionListUndone.length}`;
         return (
             <div id="toDoList" onClick={this.clickOnToDoList}>
-                <p> {this.props.topText || 'Liste des taches a faire :'} </p>
+                <p> {this.props.topText || 'Liste des tâches a faire :'} </p>
                     <div className="scroll_list">
                         <FoldableDiv title={retardTitle} titleStyle={{color : 'red'}} folded={true}>
                             <div className="scroll_list">

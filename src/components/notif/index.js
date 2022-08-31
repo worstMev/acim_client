@@ -43,7 +43,9 @@ export default class Notif extends React.Component {
     call = ({username_user , num_app_user_user}) => {
         //alert(`appeller ${username_user} avec num ${num_app_user_user}`);
         //create a peer for the peerServer
-        let userToCall = { num_user : num_app_user_user , username : username_user };
+        let { num_notification } = this.props.notif;
+        
+        let userToCall = { num_user : num_app_user_user , username : username_user , num_notification };
         this.props.addToListToCall(userToCall);
     }
     render () {
@@ -123,7 +125,7 @@ export default class Notif extends React.Component {
                         <p> {this.props.notif.lieu} </p>
                     </div>
                     <div className="date_envoie">
-                        <p> Date d'envoie : </p>
+                        <p> Date d'envoi : </p>
                         <DateHourMinute date = {this.props.notif.date_envoie} />
                     </div>
                     <button className="myButton" onClick={this.showDetails}> Details </button>
@@ -131,10 +133,11 @@ export default class Notif extends React.Component {
                 </div>
                 { this.state.detailsAreShown &&
                     <div className="notif-details" style={detailStyle}>
-                        <p> Probleme notifié : {probleme_type} </p>
+                        <p> Problème notifié : {probleme_type} </p>
                         <p> Remarque : {this.props.notif.remarque || '-'} </p>
                         <p> Lieu : {lieu} </p>
-                        <p> Envoyee par : {this.props.notif.sender_username || '-'} </p>
+                        <p> Envoyée par : {this.props.notif.sender_username || '-'} </p>
+                        <p> ID notification : {this.props.notif.num_notification} </p>
                     </div>
                 }
                 {

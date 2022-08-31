@@ -103,7 +103,7 @@ export default class Notif_history extends React.Component {
             <div className="notif_history" style={style} >
                 <div className="notif_history-sum" style={sumStyle}>
                     <div className="date_envoie">
-                        <p> Date d'envoie : </p>
+                        <p> Date d'envoi : </p>
                         <DateHourMinute date={date_envoie}/>
                     </div>
                     <div className="probleme_type" >
@@ -127,7 +127,7 @@ export default class Notif_history extends React.Component {
                                 }
                             </p>
                             <p> prise en charge par : {tech_main_username}  </p>
-                            <p> repondue le :<DateHourMinute date={date_reponse}/> </p>
+                            <p> répondue le :<DateHourMinute date={date_reponse}/> </p>
                             </>
                         }
                         <p> ID notification : {num_notification} </p>

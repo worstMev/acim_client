@@ -21,7 +21,7 @@ export default class AppHeader extends Component {
                     <img src={logo} alt="mndpt|acimi"/>
                 </div>
                 <div className="deconnecter">
-                    <button onClick={this.props.logOut} className= "myButton"> se deconnecter </button>
+                    <button onClick={this.props.logOut} className= "myButton"> se déconnecter </button>
                 </div>
             </div>
 
